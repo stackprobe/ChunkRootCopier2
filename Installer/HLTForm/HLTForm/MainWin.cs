@@ -78,9 +78,10 @@ namespace HLTStudio
 					{
 						const bool 新しいフォルダの作成を許可するか_Flag = true;
 
-						fbd.Description = "インストール先フォルダを変更します。\r\n"
-							+ $"選択されたパス + \"{Consts.VENDOR_FOLDER_NAME}\\{Consts.APPLICATION_NAME}\"\r\n"
-							+ "という構成でフォルダを作成し、アプリケーションをインストールします。";
+						fbd.Description =
+							"インストール先フォルダを変更します。\r\n" +
+							"※ルートディレクトリ・ネットワークディレクトリは選択できません。\r\n" +
+							"※ルートディレクトリを選択すると、アプリケーション名を付与します。";
 						fbd.RootFolder = Environment.SpecialFolder.Desktop;
 						fbd.SelectedPath = initialSelectedPath;
 						fbd.ShowNewFolderButton = 新しいフォルダの作成を許可するか_Flag;
@@ -89,15 +90,8 @@ namespace HLTStudio
 						{
 							string installDir = SCommon.MakeFullPath(fbd.SelectedPath);
 
-							// ベンダーフォルダ名を追加する。
-							if (
-								!installDir.EndsWithIgnoreCase($"\\{Consts.VENDOR_FOLDER_NAME}") &&
-								!installDir.EndsWithIgnoreCase($"\\{Consts.VENDOR_FOLDER_NAME}\\{Consts.APPLICATION_NAME}")
-								)
-								installDir = Path.Combine(installDir, Consts.VENDOR_FOLDER_NAME);
-
-							// アプリケーション名を追加する。
-							if (!installDir.EndsWithIgnoreCase($"\\{Consts.APPLICATION_NAME}"))
+							// ルートディレクトリ回避
+							if (SCommon.IsAbsRootDir(installDir))
 								installDir = Path.Combine(installDir, Consts.APPLICATION_NAME);
 
 							this.TxtInstallDir.Text = installDir;
@@ -160,7 +154,7 @@ namespace HLTStudio
 				DoInstall();
 
 				MessageDlg.Run(
-					MessageDlg.Kind_e.Information,
+					MessageDlg.Kind_e.Complete,
 					"インストール完了",
 					"インストールが完了しました。",
 					null,
@@ -170,7 +164,7 @@ namespace HLTStudio
 				this.Close();
 				return;
 			}
-			catch (SCommon.Cancelled)
+			catch (Cancelled)
 			{
 				MessageDlg.Run(
 					MessageDlg.Kind_e.Warning,
@@ -222,7 +216,7 @@ namespace HLTStudio
 					);
 
 				if (ret != 1)
-					throw new SCommon.Cancelled();
+					throw new Cancelled();
 			}
 
 			if (createShortcutFlag)
@@ -241,7 +235,7 @@ namespace HLTStudio
 						);
 
 					if (ret != 1)
-						throw new SCommon.Cancelled();
+						throw new Cancelled();
 				}
 			}
 
@@ -256,7 +250,7 @@ namespace HLTStudio
 					);
 
 				if (ret != 1)
-					throw new SCommon.Cancelled();
+					throw new Cancelled();
 			}
 
 			ProcessingDlg.Run("インストール", () =>
@@ -309,10 +303,8 @@ namespace HLTStudio
 				{
 					SCommon.EnsureMoveDir(installDir, escapeDir);
 				}
-				//catch (Exception ex)
 				catch
 				{
-					//throw new Exception("インストール先のフォルダは現在使用されています。", ex);
 					throw new Exception("インストール先のフォルダは現在使用されています。");
 				}
 
@@ -379,7 +371,7 @@ namespace HLTStudio
 				this.Close();
 				return;
 			}
-			catch (SCommon.Cancelled)
+			catch (Cancelled)
 			{
 				MessageDlg.Run(
 					MessageDlg.Kind_e.Warning,
@@ -434,7 +426,7 @@ namespace HLTStudio
 					else if (ret == 2)
 						removeShortcutFlag = false;
 					else
-						throw new SCommon.Cancelled();
+						throw new Cancelled();
 				}
 			}
 
@@ -452,7 +444,7 @@ namespace HLTStudio
 					);
 
 				if (ret != 1)
-					throw new SCommon.Cancelled();
+					throw new Cancelled();
 			}
 
 			ProcessingDlg.Run("アンインストール", () =>
@@ -479,8 +471,6 @@ namespace HLTStudio
 			if (!Directory.Exists(installDir))
 				throw new Exception("インストール先のフォルダが存在しません！");
 
-			string vendorFolder = SCommon.ToParentPath(installDir);
-
 			// インストール先フォルダのハンドル残存チェック -> 削除
 			{
 				string escapeDir = SCommon.ToCreatablePath(installDir);
@@ -489,31 +479,12 @@ namespace HLTStudio
 				{
 					SCommon.EnsureMoveDir(installDir, escapeDir);
 				}
-				//catch (Exception ex)
 				catch
 				{
-					//throw new Exception("インストール先のフォルダは現在使用されています。", ex);
 					throw new Exception("インストール先のフォルダは現在使用されています。");
 				}
 
 				SCommon.DeletePath(escapeDir);
-			}
-
-			// 可能であればベンダーフォルダも削除する。
-			{
-				string[] strPaths = Directory.GetDirectories(vendorFolder)
-					.Concat(Directory.GetFiles(vendorFolder))
-					.ToArray();
-
-				if (strPaths.Length == 0)
-				{
-					try
-					{
-						Directory.Delete(vendorFolder, false);
-					}
-					catch
-					{ }
-				}
 			}
 
 			if (removeShortcutFlag)
@@ -521,5 +492,8 @@ namespace HLTStudio
 		}
 
 		#endregion
+
+		private class Cancelled : Exception
+		{ }
 	}
 }

@@ -18,6 +18,7 @@ namespace HLTStudio.Dialogs
 			Warning,
 			Information,
 			Question,
+			Complete,
 		}
 
 		/// <summary>
@@ -35,7 +36,8 @@ namespace HLTStudio.Dialogs
 				kind != Kind_e.Error &&
 				kind != Kind_e.Warning &&
 				kind != Kind_e.Information &&
-				kind != Kind_e.Question
+				kind != Kind_e.Question &&
+				kind != Kind_e.Complete
 				)
 				kind = Kind_e.Error;
 
@@ -130,6 +132,13 @@ namespace HLTStudio.Dialogs
 					this.QuestionIcon.Location = this.ErrorIcon.Location;
 					this.QuestionIcon.Size = this.ErrorIcon.Size;
 					this.QuestionIcon.Visible = true;
+					break;
+
+				case Kind_e.Complete:
+					this.ErrorIcon.Visible = false;
+					this.CompleteIcon.Location = this.ErrorIcon.Location;
+					this.CompleteIcon.Size = this.ErrorIcon.Size;
+					this.CompleteIcon.Visible = true;
 					break;
 
 				default:

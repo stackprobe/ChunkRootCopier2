@@ -3,19 +3,15 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using HLTStudio.Commons;
 
 namespace HLTStudio
 {
 	public static class Consts
 	{
 		/// <summary>
-		/// ベンダーフォルダ名
-		/// </summary>
-		public static readonly string VENDOR_FOLDER_NAME = "HLTWorks";
-
-		/// <summary>
 		/// アプリケーション名
-		/// 用途：表示・フォルダ名・ショートカット名
+		/// 用途：表示・デフォルトのフォルダ名・ショートカット名
 		/// </summary>
 		public static readonly string APPLICATION_NAME = "ChunkRootCopier";
 
@@ -40,7 +36,7 @@ namespace HLTStudio
 					)
 					throw new Exception("Bad appDataLocalDir");
 
-				return Path.Combine(appDataLocalDir, VENDOR_FOLDER_NAME, APPLICATION_NAME);
+				return Path.Combine(appDataLocalDir, APPLICATION_NAME);
 			}
 		}
 
@@ -49,8 +45,8 @@ namespace HLTStudio
 		/// </summary>
 		public static readonly string[] CLUSTER_FILES = new string[]
 		{
-			"Chroco.cmp-gz",
 			"GUIChroco.cmp-gz",
+			"Chroco.cmp-gz",
 		};
 
 		/// <summary>
@@ -61,16 +57,55 @@ namespace HLTStudio
 		/// <summary>
 		/// 起動プログラム
 		/// インストール先からの相対パス
+		/// 例："MainProgram\\MainProgram.exe"
 		/// </summary>
-		public static readonly string MAIN_PROGRAM = @"GUIChroco\GUIChroco.exe";
+		public static string MAIN_PROGRAM
+		{
+			get
+			{
+				string mainCluster = CLUSTER_FILES[0];
+				string mainClusterName;
+
+				{
+					int p = mainCluster.IndexOf('.');
+
+					if (p == -1)
+						throw null; // never
+
+					mainClusterName = mainCluster.Substring(0, p);
+				}
+
+				if (mainClusterName == "")
+					throw null; // never
+
+				return $"{mainClusterName}\\{mainClusterName}.exe";
+			}
+		}
 
 		/// <summary>
 		/// インストール先に配置するシグネチャ・ファイル名
-		/// --
 		/// 既インストール先の判定に使用する。
-		/// インストール先の末端フォルダ名はアプリケーション名によって異なるため、
-		/// (重複を避ける目的で)いちいち変える必要は無い。
 		/// </summary>
-		public static readonly string INSTALLED_SIGNATURE = "HLT_{dc63e002-fe96-4123-b93e-c5795ed66f42}";
+		public static string INSTALLED_SIGNATURE
+		{
+			get
+			{
+				const string TRAILER_PATTERN = "_{857ac54a-2973-45d2-bcbd-bf5086b313d9}";
+
+				string hash = SCommon.Base32.I.Encode(
+					SCommon.GetPart(
+						SCommon.GetSHA512(
+							Encoding.UTF8.GetBytes(
+								APPLICATION_NAME + TRAILER_PATTERN
+								)
+							)
+							, 0
+							, 20
+						)
+					);
+
+				return $"HLT_{hash}";
+			}
+		}
 	}
 }

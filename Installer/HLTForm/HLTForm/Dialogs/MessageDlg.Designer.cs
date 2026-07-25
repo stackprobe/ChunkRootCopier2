@@ -43,12 +43,14 @@
 			this.LShowDetails = new System.Windows.Forms.Label();
 			this.BtnOption2 = new System.Windows.Forms.Button();
 			this.BtnOption3 = new System.Windows.Forms.Button();
+			this.CompleteIcon = new System.Windows.Forms.PictureBox();
 			this.MainPanel.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.WarningIcon)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.QuestionIcon)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.InformationIcon)).BeginInit();
 			this.TxtDetailMessageMenu.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.ErrorIcon)).BeginInit();
+			((System.ComponentModel.ISupportInitialize)(this.CompleteIcon)).BeginInit();
 			this.SuspendLayout();
 			// 
 			// MainPanel
@@ -57,6 +59,7 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
 			this.MainPanel.BackColor = System.Drawing.Color.White;
+			this.MainPanel.Controls.Add(this.CompleteIcon);
 			this.MainPanel.Controls.Add(this.WarningIcon);
 			this.MainPanel.Controls.Add(this.QuestionIcon);
 			this.MainPanel.Controls.Add(this.InformationIcon);
@@ -195,6 +198,16 @@
 			this.BtnOption3.UseVisualStyleBackColor = true;
 			this.BtnOption3.Click += new System.EventHandler(this.BtnOption3_Click);
 			// 
+			// CompleteIcon
+			// 
+			this.CompleteIcon.Image = ((System.Drawing.Image)(resources.GetObject("CompleteIcon.Image")));
+			this.CompleteIcon.Location = new System.Drawing.Point(300, 20);
+			this.CompleteIcon.Name = "CompleteIcon";
+			this.CompleteIcon.Size = new System.Drawing.Size(40, 40);
+			this.CompleteIcon.TabIndex = 6;
+			this.CompleteIcon.TabStop = false;
+			this.CompleteIcon.Visible = false;
+			// 
 			// MessageDlg
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
@@ -224,6 +237,7 @@
 			((System.ComponentModel.ISupportInitialize)(this.InformationIcon)).EndInit();
 			this.TxtDetailMessageMenu.ResumeLayout(false);
 			((System.ComponentModel.ISupportInitialize)(this.ErrorIcon)).EndInit();
+			((System.ComponentModel.ISupportInitialize)(this.CompleteIcon)).EndInit();
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
@@ -244,5 +258,6 @@
 		private System.Windows.Forms.PictureBox QuestionIcon;
 		private System.Windows.Forms.ContextMenuStrip TxtDetailMessageMenu;
 		private System.Windows.Forms.ToolStripMenuItem TxtDetailMessageMenu_コピー;
+		private System.Windows.Forms.PictureBox CompleteIcon;
 	}
 }
