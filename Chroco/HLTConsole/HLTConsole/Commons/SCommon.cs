@@ -1,34 +1,21 @@
-﻿// Processed by SolutionConv >>>
-//
-// 本ソースファイルは、公開時の所定の手続きとして一部のセンシティブな情報をマスキングしています。
-// 元データの機微に触れる可能性がある箇所を伏せ字化したものであり、
-// リリース版との処理内容に実質的な差異が生じない範囲で調整を加えています。
-//
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
+using System.Security.AccessControl;
 using System.Security.Cryptography;
+using System.Security.Principal;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
 
 namespace HLTStudio.Commons
 {
-	// ////////////////////////////////////////////////////////////////////////////////
-	// ///// ///////////////////////// /////
-	// ////////////////////////////////////////////////////////////////////////////////
-	// ////////////////////////////////////////////////
-	// ////////////////////
-	// ///////////////////////////////////////
-	// ////////////////////////////////////////////////////////////////////////////////
-
-	/// /////////
-	/// //////////////////////////
-	/// //////////
+	/// <summary>
+	/// 共通機能・便利機能はできるだけこのクラスに集約する。
+	/// </summary>
 	public static class SCommon
 	{
 		private class P_AnonyDisposable : IDisposable
@@ -71,8 +58,8 @@ namespace HLTStudio.Commons
 			};
 		}
 
-		// ///// / ////////
-		// //////// // //////// / / /////// // //////// / ///////// /////////////// // /////// ////
+		// memo: @ 2024.8.7
+		// string[] a, string[] b ⇒ Comp(a, b, a.Length - b.Length) のとき曖昧になるので、Comp -> MltComp とした。
 
 		public static int MltComp<T>(T a, T b, params Comparison<T>[] arrComp)
 		{
@@ -111,7 +98,7 @@ namespace HLTStudio.Commons
 				if (match(list[index]))
 					return index;
 
-			return -1; // /// /////
+			return -1; // not found
 		}
 
 		public static void Swap<T>(IList<T> list, int a, int b)
@@ -144,7 +131,7 @@ namespace HLTStudio.Commons
 
 		public static void UIntToBytes(uint value, byte[] dest, int index = 0)
 		{
-			// ////// //////
+			// Little Endian
 
 			dest[index + 0] = (byte)((value >> 0) & 0xff);
 			dest[index + 1] = (byte)((value >> 8) & 0xff);
@@ -154,7 +141,7 @@ namespace HLTStudio.Commons
 
 		public static uint ToUInt(byte[] src, int index = 0)
 		{
-			// ////// //////
+			// Little Endian
 
 			return
 				((uint)src[index + 0] << 0) |
@@ -172,7 +159,7 @@ namespace HLTStudio.Commons
 
 		public static void ULongToBytes(ulong value, byte[] dest, int index = 0)
 		{
-			// ////// //////
+			// Little Endian
 
 			dest[index + 0] = (byte)((value >> 0) & 0xff);
 			dest[index + 1] = (byte)((value >> 8) & 0xff);
@@ -186,7 +173,7 @@ namespace HLTStudio.Commons
 
 		public static ulong ToULong(byte[] src, int index = 0)
 		{
-			// ////// //////
+			// Little Endian
 
 			return
 				((ulong)src[index + 0] << 0) |
@@ -199,12 +186,12 @@ namespace HLTStudio.Commons
 				((ulong)src[index + 7] << 56);
 		}
 
-		/// /////////
-		/// //////////
-		/// /// /////////// /////////// ////////// / // ////////// / ////////// / //////////
-		/// //////////
-		/// ////// ////////////////////////////
-		/// ///////////////////////////
+		/// <summary>
+		/// バイト列を連結する。
+		/// 例：{ BYTE_ARR_1, BYTE_ARR_2, BYTE_ARR_3 } -> BYTE_ARR_1 + BYTE_ARR_2 + BYTE_ARR_3
+		/// </summary>
+		/// <param name="src">バイト列の引数配列</param>
+		/// <returns>連結したバイト列</returns>
 		public static byte[] Join(IList<byte[]> src)
 		{
 			int offset = 0;
@@ -223,14 +210,14 @@ namespace HLTStudio.Commons
 			return dest;
 		}
 
-		/// /////////
-		/// ///////////////////
-		/// /////// ///////////// ////////
-		/// /// /////////// /////////// ////////// / // //////////////// / ////////// / //////////////// / ////////// / //////////////// / //////////
-		/// /////// / ///////////////////////// ////
-		/// //////////
-		/// ////// ////////////////////////////
-		/// ///////////////////////////
+		/// <summary>
+		/// バイト列を再分割可能なように連結する。
+		/// 再分割するには SCommon.Split を使用すること。
+		/// 例：{ BYTE_ARR_1, BYTE_ARR_2, BYTE_ARR_3 } -> SIZE(BYTE_ARR_1) + BYTE_ARR_1 + SIZE(BYTE_ARR_2) + BYTE_ARR_2 + SIZE(BYTE_ARR_3) + BYTE_ARR_3
+		/// SIZE(b) は SCommon.ToBytes(b.Length) である。
+		/// </summary>
+		/// <param name="src">バイト列の引数配列</param>
+		/// <returns>連結したバイト列</returns>
 		public static byte[] SplittableJoin(IList<byte[]> src)
 		{
 			int offset = 0;
@@ -251,11 +238,11 @@ namespace HLTStudio.Commons
 			return dest;
 		}
 
-		/// /////////
-		/// ///////////
-		/// //////////
-		/// ////// ///////////////////////////
-		/// ///////////////////////////////
+		/// <summary>
+		/// バイト列を再分割する。
+		/// </summary>
+		/// <param name="src">連結したバイト列</param>
+		/// <returns>再分割したバイト列の配列</returns>
 		public static byte[][] Split(byte[] src)
 		{
 			List<byte[]> dest = new List<byte[]>();
@@ -310,14 +297,14 @@ namespace HLTStudio.Commons
 
 			private Regex REGEX_SERIALIZED_STRING = new Regex("^[0-9][A-Za-z0-9+/]*[0-9]$");
 
-			/// /////////
-			/// //////////////////////
-			/// /////////////
-			/// // ///////////
-			/// // // // //////////////////////////
-			/// //////////
-			/// ////// //////////////////////////////////////
-			/// ///////////////////////////////
+			/// <summary>
+			/// 文字列のリストを連結してシリアライズします。
+			/// シリアライズされた文字列：
+			/// -- 常に空文字列ではない。
+			/// -- 書式 == ^[0-9][A-Za-z0-9+/]*[0-9]$
+			/// </summary>
+			/// <param name="plainStrings">任意の文字列のリスト</param>
+			/// <returns>シリアライズされた文字列</returns>
 			public string Join(IList<string> plainStrings)
 			{
 				if (
@@ -326,18 +313,18 @@ namespace HLTStudio.Commons
 					)
 					throw new Exception("不正な入力文字列リスト");
 
-				string serializedString = Encode(SCommon.Base64.I.EncodeNoPadding(SCommon.Compress(
+				string serializedString = Encode(SCommon.Base64.I.EncodeNoPadding(RewriteGzipXflToZeroIfDeflate(SCommon.Compress(
 					SCommon.SplittableJoin(plainStrings.Select(plainString => Encoding.UTF8.GetBytes(plainString)).ToArray())
-					)));
+					))));
 
 				return serializedString;
 			}
 
-			/// /////////
-			/// ////////////////////////////
-			/// //////////
-			/// ////// ////////////////////////////////////////////
-			/// ///////////////////////////
+			/// <summary>
+			/// シリアライズされた文字列から文字列のリストを復元します。
+			/// </summary>
+			/// <param name="serializedString">シリアライズされた文字列</param>
+			/// <returns>元の文字列リスト</returns>
 			public string[] Split(string serializedString)
 			{
 				if (
@@ -358,17 +345,15 @@ namespace HLTStudio.Commons
 				int stAn = 0;
 				int edAn = 0;
 
-				// //////////////////////
-				// // //////// / ////////////// /// ////
-				// // / /////// / ////////////////// /// ////
-				// // / ////////////////// / /////// /// ////
-				//                               //
-				//                               //////////////
-				//                               // / ////////// //// /////// /////////
-				// /////
-				// // ////////////////////////////////////
+				// str(gz&Base64)の先頭部の想定：
+				// -- ID(1f8b) + CM=DEFLATE(08) ==> H4sI
+				// -- + FLG(00) + TIME-STAMP-1(0000) ==> AAAA
+				// -- + TIME-STAMP-2(0000) + XFL(00) ==> AAAA
+				//
+				// gz仕様：
+				// -- https://www.ietf.org/rfc/rfc1952.txt
 
-				if (str.StartsWith("H4sIA")) // /////
+				if (str.StartsWith("H4sIA")) // 先頭を圧縮
 				{
 					for (stAn = 1; stAn < 9; stAn++)
 					{
@@ -380,7 +365,7 @@ namespace HLTStudio.Commons
 					str = str.Substring(4 + stAn);
 				}
 
-				// /////
+				// 終端を圧縮
 				{
 					for (; edAn < 9; edAn++)
 					{
@@ -404,11 +389,11 @@ namespace HLTStudio.Commons
 					new string('A', str[str.Length - 1] - '0');
 			}
 
-			/// /////////
-			/// //////////////////////
-			/// //////////
-			/// ////// //////////////////////////////////////
-			/// ////////////////////////////////
+			/// <summary>
+			/// 文字列のリストを連結してシリアライズします。
+			/// </summary>
+			/// <param name="plainStrings">任意の文字列のリスト</param>
+			/// <returns>シリアライズされたバイト列</returns>
 			public byte[] BinJoin(IList<string> plainStrings)
 			{
 				if (
@@ -417,18 +402,18 @@ namespace HLTStudio.Commons
 					)
 					throw new Exception("不正な入力文字列リスト");
 
-				byte[] serializedBytes = Encode(SCommon.Compress(
+				byte[] serializedBytes = Encode(RewriteGzipXflToZeroIfDeflate(SCommon.Compress(
 					SCommon.SplittableJoin(plainStrings.Select(plainString => Encoding.UTF8.GetBytes(plainString)).ToArray())
-					));
+					)));
 
 				return serializedBytes;
 			}
 
-			/// /////////
-			/// /////////////////////////////
-			/// //////////
-			/// ////// ////////////////////////////////////////////
-			/// ///////////////////////////
+			/// <summary>
+			/// シリアライズされたバイト列から文字列のリストを復元します。
+			/// </summary>
+			/// <param name="serializedString">シリアライズされた文字列</param>
+			/// <returns>元の文字列リスト</returns>
 			public string[] Split(byte[] serializedBytes)
 			{
 				if (
@@ -449,17 +434,15 @@ namespace HLTStudio.Commons
 				int stZn = 0;
 				int edZn = 0;
 
-				// ////////////////
-				// // //////// / //////////////
-				// // / /////// / //////////////////
-				// // / ////////////////// / ///////
-				//                               //
-				//                               //////////////
-				//                               // / ////////// //// /////// /////////
-				// /////
-				// // ////////////////////////////////////
+				// data(gz)の先頭部の想定：
+				// -- ID(1f8b) + CM=DEFLATE(08)
+				// -- + FLG(00) + TIME-STAMP-1(0000)
+				// -- + TIME-STAMP-2(0000) + XFL(00)
+				//
+				// gz仕様：
+				// -- https://www.ietf.org/rfc/rfc1952.txt
 
-				// /////
+				// 先頭を圧縮
 				if (
 					data.Length >= 4 &&
 					data[0] == 0x1f &&
@@ -478,7 +461,7 @@ namespace HLTStudio.Commons
 					data = SCommon.GetPart(data, 3 + stZn);
 				}
 
-				// /////
+				// 終端を圧縮
 				{
 					for (; edZn < 0x0f; edZn++)
 					{
@@ -510,6 +493,41 @@ namespace HLTStudio.Commons
 					SCommon.GetPart(data, 1),
 					Enumerable.Repeat((byte)0x00, edZn).ToArray(),
 				});
+			}
+
+			private byte[] RewriteGzipXflToZeroIfDeflate(byte[] data)
+			{
+				// data(gz)の先頭部の想定：
+				// -- ID(1f8b) + CM=DEFLATE(08)
+				// -- + FLG(00) + TIME-STAMP-1(0000)
+				// -- + TIME-STAMP-2(0000) + XFL(04)
+				//                               ~~
+				//                               Javaでやると00になる。
+				//                               04 = compressor used fastest algorithm
+				// 書き換え内容：
+				// -- XFL(04) ⇒ XFL(00)
+				//
+				// gz仕様：
+				// -- https://www.ietf.org/rfc/rfc1952.txt
+
+				if (
+					data.Length >= 9 &&
+					data[0] == 0x1F && // ID-1(1f)
+					data[1] == 0x8B && // ID-2(8b)
+					data[2] == 0x08 && // CM=DEFLATE(08)
+					data[3] == 0x00 && // FLG(00)
+					data[4] == 0x00 && // MTIME-1(00)
+					data[5] == 0x00 && // MTIME-2(00)
+					data[6] == 0x00 && // MTIME-3(00)
+					data[7] == 0x00 && // MTIME-4(00)
+					(
+						data[8] == 0x02 || // XLF(02) == compressor used maximum compression, slowest algorithm
+						data[8] == 0x04    // XLF(04) == compressor used fastest algorithm
+					))
+				{
+					data[8] = 0x00; // XFL(02), XFL(04) ⇒ XFL(00)
+				}
+				return data;
 			}
 		}
 
@@ -559,11 +577,11 @@ namespace HLTStudio.Commons
 			}
 		}
 
-		/// /////////
-		/// ////////////
-		/// //////////
-		/// ////////// /////////////////////////
-		/// ////////// ////////////////////////
+		/// <summary>
+		/// 重複可能なディクショナリ
+		/// </summary>
+		/// <typeparam name="K">キーの型</typeparam>
+		/// <typeparam name="V">値の型</typeparam>
 		public class MultiDictionary<K, V>
 		{
 			private Dictionary<K, List<V>> Inner;
@@ -601,11 +619,11 @@ namespace HLTStudio.Commons
 				this.Inner.Remove(key);
 			}
 
-#if false // ///
-			////// //// //////// //// /// //////
-			/
-				////////////////////////////////
-			/
+#if false // 不使用
+			public void Remove(K key, int index)
+			{
+				this.Inner[key].RemoveAt(index);
+			}
 #endif
 
 			public int Count => this.Inner.Values.Sum(s => s.Count);
@@ -645,10 +663,10 @@ namespace HLTStudio.Commons
 			return new MultiDictionary<string, V>(new EqualityComparerStringIgnoreCase());
 		}
 
-		/// /////////
-		/// ////////////
-		/// //////////
-		/// ////////// ////////////////////////
+		/// <summary>
+		/// 重複可能なハッシュセット
+		/// </summary>
+		/// <typeparam name="T">値の型</typeparam>
 		public class MultiHashSet<T>
 		{
 			private Dictionary<T, List<T>> Inner;
@@ -684,11 +702,11 @@ namespace HLTStudio.Commons
 				this.Inner.Remove(value);
 			}
 
-#if false // ///
-			////// //// //////// ////// /// //////
-			/
-				//////////////////////////////////
-			/
+#if false // 不使用
+			public void Remove(T value, int index)
+			{
+				this.Inner[value].RemoveAt(index);
+			}
 #endif
 
 			public int Count => this.Inner.Values.Sum(s => s.Count);
@@ -710,11 +728,11 @@ namespace HLTStudio.Commons
 
 			public int KindCount => this.Inner.Count;
 
-#if false // /////// //////
-			////// /////////////////////////// /// /////////
-			/
-				////// //////////////////////// // /// /////////////// ///////// ////////
-			/
+#if false // .Values を使うこと。
+			public IEnumerable<KeyValuePair<T, T>> Iterate()
+			{
+				return this.Values.Select(value => new KeyValuePair<T, T>(value, value));
+			}
 #endif
 		}
 
@@ -728,9 +746,9 @@ namespace HLTStudio.Commons
 			return new MultiHashSet<string>(new EqualityComparerStringIgnoreCase());
 		}
 
-		/// /////////
-		/// //////////////////////
-		/// //////////
+		/// <summary>
+		/// doubleの許容誤差として慣習的に決めた値
+		/// </summary>
 		public const double EPSIRLON = 1.0 / IMAX;
 
 		private static void CheckNaN(double value)
@@ -802,22 +820,22 @@ namespace HLTStudio.Commons
 
 		public static int ToInt(double value, int minval, int maxval)
 		{
-			return ToInt(value, minval, maxval, minval); // / ///// // ////// /////// ////// ///// /////////
+			return ToInt(value, minval, maxval, minval); // ★ ToInt 系の defval のデフォルトは minval とする。@ 2025.12.1
 		}
 
 		public static long ToLong(double value, long minval, long maxval)
 		{
-			return ToLong(value, minval, maxval, minval); // / ///// // ////// /////// ////// ///// /////////
+			return ToLong(value, minval, maxval, minval); // ★ ToInt 系の defval のデフォルトは minval とする。@ 2025.12.1
 		}
 
-		/// /////////
-		/// /////////////////////
-		/// //// // // / // / // // / // / // // / // // / // // // // // // // // / /
-		/// ///////////// ///// / //// //// /// // / /////////////////////////// /////////
-		/// //////////
-		/// ////////// /////////////////////////
-		/// ////// ///////////////////////////////
-		/// ////////////////////////////
+		/// <summary>
+		/// 2次元配列を1次元配列(列挙)に変換する。
+		/// 例：{{ A, B, C }, { D, E, F }, { G, H, I }} -> { A, B, C, D, E, F, G, H, I }
+		/// Linearize(new T[][] { AAA, BBB, CCC }) と AAA.Concat(BBB).Concat(CCC) は同じようなもの。
+		/// </summary>
+		/// <typeparam name="T">要素の型</typeparam>
+		/// <param name="src">列挙の列挙(2次元配列)</param>
+		/// <returns>列挙(1次元配列)</returns>
 		public static IEnumerable<T> Linearize<T>(IEnumerable<T[]> src)
 		{
 			List<T[]> srcTable = src.ToList();
@@ -827,18 +845,18 @@ namespace HLTStudio.Commons
 					yield return element;
 		}
 
-		/// /////////
-		/// ////////////////////
-		/// //// / /////////////////////////////////////// ////
-		/// ///////////// /////////// // / //////////// //////////// /////////// /
-		/// ////// // /////////////////
-		/// ///// //// / ////////////////////////// ////
-		/// ////////////// /////////// // / //////////// //////////// //////////// /// /
-		/// //////////
-		/// ////////// /////////////////////////
-		/// ////// /////////////////////// // // //////////
-		/// ////// ///////////////////////////////
-		/// /////////////////////
+		/// <summary>
+		/// 生成器をくり返し実行して要素を列挙する。
+		/// Java の Stream.generate(generator).limit(count) と同じ。
+		/// 例：Generate(3, generator); -> { generator(), generator(), generator() }
+		/// 要素の個数に -1 を指定すると無限に要素を列挙する。
+		/// この場合は Java の Stream.generate(generator) と同じ。
+		/// 例：Generate(-1, generator); -> { generator(), generator(), generator(), ... }
+		/// </summary>
+		/// <typeparam name="T">要素の型</typeparam>
+		/// <param name="count">要素の個数(0～), -1 == 無限</param>
+		/// <param name="generator">要素の生成器</param>
+		/// <returns>列挙</returns>
 		public static IEnumerable<T> Generate<T>(int count, Func<T> generator)
 		{
 			while (count == -1 || 0 <= --count)
@@ -847,13 +865,13 @@ namespace HLTStudio.Commons
 			}
 		}
 
-		/// /////////
-		/// ///////////////////
-		/// /// // // / / // //////////////// / // // // /////////// /////////// /////////// /// /
-		/// //////////
-		/// ////////// /////////////////////////
-		/// ////// /////////////////////
-		/// ///////////////////////////
+		/// <summary>
+		/// 列挙を逐次取得メソッドでラップします。
+		/// 例：{ A, B, C } -> 呼び出し毎に右の順で戻り値を返す { A, B, C, default(T), default(T), default(T), ... }
+		/// </summary>
+		/// <typeparam name="T">要素の型</typeparam>
+		/// <param name="src">列挙</param>
+		/// <returns>逐次取得メソッド</returns>
 		public static Func<T> Supplier<T>(IEnumerable<T> src)
 		{
 			IEnumerator<T> reader = src.GetEnumerator();
@@ -872,23 +890,23 @@ namespace HLTStudio.Commons
 			};
 		}
 
-		public static T DesertElement<T>(List<T> list, int index) // ///// ///////// ///// //// ////
+		public static T DesertElement<T>(List<T> list, int index) // list: 長さを変更するので IList ではなく List
 		{
 			T ret = list[index];
 			list.RemoveAt(index);
 			return ret;
 		}
 
-		public static T UnaddElement<T>(List<T> list) // ///// ///////// ///// //// ////
+		public static T UnaddElement<T>(List<T> list) // list: 長さを変更するので IList ではなく List
 		{
 			return DesertElement(list, list.Count - 1);
 		}
 
-		public static T FastDesertElement<T>(List<T> list, int index) // ///// ///////// ///// //// ////
+		public static T FastDesertElement<T>(List<T> list, int index) // list: 長さを変更するので IList ではなく List
 		{
 			T ret;
 
-			if (index == list.Count - 1) // / /////
+			if (index == list.Count - 1) // ? 終端の要素
 			{
 				ret = UnaddElement(list);
 			}
@@ -900,7 +918,7 @@ namespace HLTStudio.Commons
 			return ret;
 		}
 
-		public static void PutElement<T>(List<T> list, int index, T value, T defval) // ///// ///////// ///// //// ///// /////// //////////// ////// / /////// /////
+		public static void PutElement<T>(List<T> list, int index, T value, T defval) // list: 長さを変更するので IList ではなく List, defval: 値を明示させるため敢えて defval = default とはせず。
 		{
 			if (index < list.Count)
 			{
@@ -915,7 +933,7 @@ namespace HLTStudio.Commons
 			}
 		}
 
-		public static T RefElement<T>(IList<T> list, int index, T defval) // /////// //////////// ////// / /////// /////
+		public static T RefElement<T>(IList<T> list, int index, T defval) // defval: 値を明示させるため敢えて defval = default とはせず。
 		{
 			if (index < list.Count)
 			{
@@ -925,6 +943,65 @@ namespace HLTStudio.Commons
 			{
 				return defval;
 			}
+		}
+
+		public static IEnumerable<T> E_RemoveAt<T>(IEnumerable<T> src, int index)
+		{
+			return E_RemoveRange(src, index, 1);
+		}
+
+		public static IEnumerable<T> E_RemoveRange<T>(IEnumerable<T> src, int index, int count)
+		{
+			int i = 0;
+
+			foreach (T e in src)
+			{
+				if (i < index || index + count <= i)
+					yield return e;
+
+				i++;
+			}
+		}
+
+		public static IEnumerable<T> E_Insert<T>(IEnumerable<T> src, int index, T element)
+		{
+			return E_InsertRange(src, index, new T[] { element });
+		}
+
+		public static IEnumerable<T> E_InsertRange<T>(IEnumerable<T> src, int index, IEnumerable<T> elements)
+		{
+			if (index < 0)
+				throw new Exception($"Bad index: {index}");
+
+			int i = 0;
+
+			foreach (T e in src)
+			{
+				if (i == index)
+					foreach (T element in elements)
+						yield return element;
+
+				yield return e;
+
+				i++;
+			}
+
+			if (i < index)
+				throw new Exception($"Bad index: {index}");
+
+			if (i == index)
+				foreach (T elem in elements)
+					yield return elem;
+		}
+
+		public static IEnumerable<T> E_Add<T>(IEnumerable<T> src, T element)
+		{
+			return src.Concat(new T[] { element });
+		}
+
+		public static IEnumerable<T> E_AddRange<T>(IEnumerable<T> src, IEnumerable<T> elements)
+		{
+			return src.Concat(elements);
 		}
 
 		private const int DISK_IO_RETRY_MAX = 20;
@@ -938,7 +1015,7 @@ namespace HLTStudio.Commons
 			if (path == "")
 				throw new Exception("削除しようとしたパスは空文字列です。");
 
-			// ///// ////////////////////////////////// /////////// // // /////////
+			// memo: 空白だけのファイル・フォルダ(例："\u3000")も削除できるので path.Trim() == "" はチェックしない。
 
 			if (File.Exists(path))
 			{
@@ -996,7 +1073,7 @@ namespace HLTStudio.Commons
 			if (dir == "")
 				throw new Exception("作成しようとしたディレクトリは空文字列です。");
 
-			// ///// ///////////////////////////// ////////// // // /////////
+			// memo: 空白だけのフォルダ(例："\u3000")も作成できるので dir.Trim() == "" はチェックしない。
 
 			for (int retryCount = 0; ; retryCount++)
 			{
@@ -1005,7 +1082,7 @@ namespace HLTStudio.Commons
 
 				try
 				{
-					Directory.CreateDirectory(dir); // ////////////////////
+					Directory.CreateDirectory(dir); // ディレクトリが存在するときは何もしない。
 				}
 				catch
 				{ }
@@ -1026,14 +1103,14 @@ namespace HLTStudio.Commons
 			CreateDir(dir);
 		}
 
-		/// /////////
-		/// //////////
-		/// ////////////////////////////////////////
-		/// ////////////////// /// /////////////
-		/// ////////////////////////////////////
-		/// //////////
-		/// ////// ////////////////////////////
-		/// ////// ////////////////////////////
+		/// <summary>
+		/// ファイルを移動する。
+		/// 移動に失敗した場合はリトライを行い、最終的に移動できなかった場合は例外を投げる。
+		/// リトライは、高負荷時に起こりやすい「 COM オブジェクト等の解放直後の
+		/// 瞬間的なファイルハンドル残存によるアクセス失敗」への対策を想定している。
+		/// </summary>
+		/// <param name="rFile">移動元ファイル</param>
+		/// <param name="wFile">移動先ファイル</param>
 		public static void EnsureMoveFile(string rFile, string wFile)
 		{
 			if (string.IsNullOrEmpty(rFile))
@@ -1073,14 +1150,14 @@ namespace HLTStudio.Commons
 			}
 		}
 
-		/// /////////
-		/// ////////////
-		/// ////////////////////////////////////////
-		/// ////////////////// /// /////////////
-		/// ////////////////////////////////////
-		/// //////////
-		/// ////// /////////////////////////////
-		/// ////// /////////////////////////////
+		/// <summary>
+		/// ディレクトリを移動する。
+		/// 移動に失敗した場合はリトライを行い、最終的に移動できなかった場合は例外を投げる。
+		/// リトライは、高負荷時に起こりやすい「 COM オブジェクト等の解放直後の
+		/// 瞬間的なファイルハンドル残存によるアクセス失敗」への対策を想定している。
+		/// </summary>
+		/// <param name="rDir">移動元ディレクトリ</param>
+		/// <param name="wDir">移動先ディレクトリ</param>
 		public static void EnsureMoveDir(string rDir, string wDir)
 		{
 			if (string.IsNullOrEmpty(rDir))
@@ -1261,11 +1338,11 @@ namespace HLTStudio.Commons
 			return path;
 		}
 
-		/// /////////
-		/// //////// ///////
-		/// //////////
-		/// ////// //////////////////////
-		/// ///////////////////////
+		/// <summary>
+		/// 厳しいフルパス化 (慣習的実装)
+		/// </summary>
+		/// <param name="path">パス</param>
+		/// <returns>フルパス</returns>
 		public static string MakeFullPath(string path)
 		{
 			if (path == null)
@@ -1282,13 +1359,13 @@ namespace HLTStudio.Commons
 
 			path = Path.GetFullPath(path);
 
-			if (path.Contains('/')) // //////////////// / /// / //// ////////
+			if (path.Contains('/')) // Path.GetFullPath が '/' を '\\' に置換するはず。
 				throw null;
 
 			if (path.StartsWith("\\\\"))
 				throw new Exception("ネットワークパスまたはデバイス名は使用できません。");
 
-			if (path.Substring(1, 2) != ":\\") // ///////////////////////
+			if (path.Substring(1, 2) != ":\\") // ネットワークパスでないならローカルパスのはず。
 				throw null;
 
 			path = PutYen(path) + ".";
@@ -1297,11 +1374,11 @@ namespace HLTStudio.Commons
 			return path;
 		}
 
-		/// /////////
-		/// //////// ///////
-		/// //////////
-		/// ////// //////////////////////
-		/// ///////////////////////
+		/// <summary>
+		/// ゆるいフルパス化 (慣習的実装)
+		/// </summary>
+		/// <param name="path">パス</param>
+		/// <returns>フルパス</returns>
 		public static string ToFullPath(string path)
 		{
 			if (path == null)
@@ -1319,29 +1396,53 @@ namespace HLTStudio.Commons
 
 		public static string ToParentPath(string path)
 		{
-			path = Path.GetDirectoryName(path);
+			string parentPath = Path.GetDirectoryName(path);
 
-			// //// // ///////////////////////////
-			// ///////////////////////////////////
-			// ////////////// // /////////
-			// ///////// // //////
-			// ////// // ////
-			// // // //
-			// //// // ////
+			// path -> Path.GetDirectoryName(path)
+			// -----------------------------------
+			// "C:\\ABC\\DEF" -> "C:\\ABC"
+			// "C:\\ABC"      -> "C:\\"
+			// "C:\\"         -> null
+			// ""             -> 例外
+			// null           -> null
 
-			if (string.IsNullOrEmpty(path))
+			if (string.IsNullOrEmpty(parentPath))
 				throw new Exception("パスから親パスに変換できません。" + path);
 
-			return path;
+			return parentPath;
 		}
 
-		#region //////////////// /////////////
+		public static string ToFileNameWithoutExtension(string path)
+		{
+			string name = Path.GetFileNameWithoutExtension(path);
 
-		/// /////////
-		/// //////////////////////////////
-		/// /////////////////////////////////////////////////////////////////////////////
-		/// //////////
-		/// /////////////////////////
+			// path -> Path.GetFileNameWithoutExtension(path)
+			// ----------------------------------------------
+			// "C:\\ABC\\DEF"     -> "DEF"
+			// "C:\\ABC\\DEF.txt" -> "DEF"
+			// "C:\\ABC\\.git"    -> ""
+			// "C:\\ABC"          -> "ABC"
+			// "C:\\ABC.txt"      -> "ABC"
+			// "C:\\.git"         -> ""
+			// "XYZ"              -> "XYZ"
+			// "XYZ.txt"          -> "XYZ"
+			// ".git"             -> ""
+			// ""                 -> ""
+			// null               -> null
+
+			if (string.IsNullOrEmpty(name))
+				throw new Exception("パスから拡張子を取り除けません。" + path);
+
+			return name;
+		}
+
+		#region ToFairLocalPath, ToFairRelPath
+
+		/// <summary>
+		/// ローカル名に使用できない予約名のリストを返す。(慣習的実装)
+		/// https://github.com/stackprobe/Factory/blob/master/Common/DataConv.c#L460-L491
+		/// </summary>
+		/// <returns>予約名リスト</returns>
 		private static IEnumerable<string> GetReservedWordsForWindowsPath()
 		{
 			yield return "AUX";
@@ -1355,7 +1456,7 @@ namespace HLTStudio.Commons
 				yield return "LPT" + no;
 			}
 
-			// //////
+			// グレーゾーン
 			{
 				yield return "COM0";
 				yield return "LPT0";
@@ -1366,16 +1467,16 @@ namespace HLTStudio.Commons
 
 		public const int MY_PATH_MAX = 250;
 
-		// ///// / /////////
-		// /////// / //////////////////////////////// ///////////////////// ////////// //////////
+		// memo: @ 2024.11.7
+		// dirSize は SCommon.GetSJISBytes(dir).Length を想定していたが、長さの判定ガバガバなので dir.Length とかでも良しとする。
 
-		/// /////////
-		/// //////////////////////
-		/// /////////////////////////////////////////////////////////////////////////////
-		/// //////////
-		/// ////// //////////////////////////////
-		/// ////// /////////////////////////////////////////////////// // // ////////////////////////
-		/// ////////////////////////
+		/// <summary>
+		/// 歴としたローカル名に変換する。(慣習的実装)
+		/// https://github.com/stackprobe/Factory/blob/master/Common/DataConv.c#L503-L563
+		/// </summary>
+		/// <param name="str">対象文字列(対象パス)</param>
+		/// <param name="dirSize">対象パスが存在するディレクトリのフルパスのバイト数または文字数(1～), -1 == バイト数または文字数を考慮しない</param>
+		/// <returns>ローカル名</returns>
 		public static string ToFairLocalPath(string str, int dirSize)
 		{
 			const string CHRS_NG = "\"*/:<>?\\|";
@@ -1404,7 +1505,7 @@ namespace HLTStudio.Commons
 				{
 					word = CHR_ALT;
 				}
-				else if (word == "") // ///// / /////////
+				else if (word == "") // added @ 2023.11.1
 				{
 					word = CHR_ALT;
 				}
@@ -1425,13 +1526,13 @@ namespace HLTStudio.Commons
 			return str;
 		}
 
-		/// /////////
-		/// //////////////////////
-		/// /////////////////////////////////////////////////////////////////////////////
-		/// //////////
-		/// ////// ///////////////////////////////
-		/// ////// /////////////////////////////////////////////////// // // ////////////////////////
-		/// ////////////////////////
+		/// <summary>
+		/// 歴とした相対パス名に変換する。(慣習的実装)
+		/// https://github.com/stackprobe/Factory/blob/master/Common/DataConv.c#L582-L604
+		/// </summary>
+		/// <param name="path">対象文字列(対象パス)</param>
+		/// <param name="dirSize">対象パスが存在するディレクトリのフルパスのバイト数または文字数(1～), -1 == バイト数または文字数を考慮しない</param>
+		/// <returns>相対パス名</returns>
 		public static string ToFairRelPath(string path, int dirSize)
 		{
 			string[] pTkns = SCommon.Tokenize(path, "\\/", false, true);
@@ -1497,8 +1598,8 @@ namespace HLTStudio.Commons
 				if (n % 100 == 0)
 					ProcMain.WriteLog("パス名の衝突回避に時間が掛かっています。" + n);
 
-				// /////
-				// ///////////////////////// /////////// // /////////////////////
+				// memo:
+				// ChangeExt("C:\\xxx\\zzz", "~123.aaa") -> "C:\\xxx\zzz~123.aaa"
 
 				newPath = SCommon.ChangeExt(path, "~" + n + Path.GetExtension(path));
 				n++;
@@ -1506,15 +1607,15 @@ namespace HLTStudio.Commons
 			return newPath;
 		}
 
-		// ///
-		// ////////////////////////// /// // /////////
+		// 注意：
+		// ChangeExt("C:\\xxx\\.zzz", "") -> "C:\\xxx"
 
 		public static string ChangeExt(string path, string ext)
 		{
 			return Path.Combine(SCommon.ToParentPath(path), Path.GetFileNameWithoutExtension(path) + ext);
 		}
 
-		#region ///////// /////////
+		#region ReadPart, WritePart
 
 		public static int ReadPartInt(Stream reader)
 		{
@@ -1594,21 +1695,21 @@ namespace HLTStudio.Commons
 			writer(buff, offset, buff.Length - offset);
 		}
 
-		/// /////////
-		/// ////////////////
-		/// //////////
-		/// ////// /////////////////////////
-		/// ///////////////////////
+		/// <summary>
+		/// 行リストをテキストに変換します。
+		/// </summary>
+		/// <param name="lines">行リスト</param>
+		/// <returns>テキスト</returns>
 		public static string LinesToText(IList<string> lines)
 		{
 			return lines.Count == 0 ? "" : string.Join("\r\n", lines) + "\r\n";
 		}
 
-		/// /////////
-		/// ////////////////
-		/// //////////
-		/// ////// ////////////////////////
-		/// ///////////////////////
+		/// <summary>
+		/// テキストを行リストに変換します。
+		/// </summary>
+		/// <param name="text">テキスト</param>
+		/// <returns>行リスト</returns>
 		public static string[] TextToLines(string text)
 		{
 			text = text.Replace("\r", "");
@@ -1622,26 +1723,26 @@ namespace HLTStudio.Commons
 			return lines;
 		}
 
-		/// /////////
-		/// ///////////////////////////////
-		/// //////////
-		/// ////// //////////////////////////////////
-		/// ////// //////////////////////////////
-		/// ////// ////////////////////////////
-		/// ///////////////////////// // // ////////////////////
+		/// <summary>
+		/// ファイル読み込みハンドルなどバイトストリーム向けのコールバック
+		/// </summary>
+		/// <param name="buff">読み込んだデータの書き込み先</param>
+		/// <param name="offset">書き込み開始位置</param>
+		/// <param name="count">書き込みサイズ</param>
+		/// <returns>実際に読み込んだサイズ(1～), ～0 == これ以上読み込めない</returns>
 		public delegate int Read_d(byte[] buff, int offset, int count);
 
-		/// /////////
-		/// ///////////////////////////////
-		/// //////////
-		/// ////// /////////////////////////////////
-		/// ////// //////////////////////////////
-		/// ////// /////////////////////////////////////
+		/// <summary>
+		/// ファイル書き込みハンドルなどバイトストリーム向けのコールバック
+		/// </summary>
+		/// <param name="buff">書き込むデータの読み込み先</param>
+		/// <param name="offset">読み込み開始位置</param>
+		/// <param name="count">読み込みサイズ(書き込みサイズ)</param>
 		public delegate void Write_d(byte[] buff, int offset, int count);
 
 		public static void ReadToEnd(Read_d reader, Write_d writer)
 		{
-			byte[] buff = new byte[2000000]; // / //
+			byte[] buff = new byte[SCommon.STANDARD_STREAM_BUFFER_SIZE];
 
 			for (; ; )
 			{
@@ -1654,24 +1755,26 @@ namespace HLTStudio.Commons
 			}
 		}
 
-		/// /////////
-		/// ////////////////
-		/// ////
-		/// ////
-		/// /////////
-		/// ////// //////////// /////
-		/// //////////
-		public const int IMAX = 1000000000; // ////
+		public const int STANDARD_STREAM_BUFFER_SIZE = 4096;
 
-		/// /////////
-		/// /////////////////////
-		/// ///////
-		/// /////
-		/// ////
-		/// //////////
-		/// ////// ///////////// /////
-		/// //////////
-		public const long IMAX64 = 1000000000000000000L; // /////
+		/// <summary>
+		/// 整数の上限として慣習的に決めた値
+		/// ・10億
+		/// ・10桁
+		/// ・9桁の最大値+1
+		/// ・2倍しても int.MaxValue より小さい
+		/// </summary>
+		public const int IMAX = 1000000000; // 10^9
+
+		/// <summary>
+		/// 64ビット整数の上限として慣習的に決めた値
+		/// ・IMAX^2
+		/// ・100京
+		/// ・19桁
+		/// ・18桁の最大値+1
+		/// ・9倍しても long.MaxValue より小さい
+		/// </summary>
+		public const long IMAX64 = 1000000000000000000L; // 10^18
 
 		public static int Comp(int a, int b)
 		{
@@ -1717,17 +1820,17 @@ namespace HLTStudio.Commons
 
 		public static int ToInt(string str, int minval, int maxval)
 		{
-			return ToInt(str, minval, maxval, minval); // / ///// // ////// /////// ////// ///// /////////
+			return ToInt(str, minval, maxval, minval); // ★ ToInt 系の defval のデフォルトは minval とする。@ 2025.12.1
 		}
 
 		public static long ToLong(string str, long minval, long maxval)
 		{
-			return ToLong(str, minval, maxval, minval); // / ///// // ////// /////// ////// ///// /////////
+			return ToLong(str, minval, maxval, minval); // ★ ToInt 系の defval のデフォルトは minval とする。@ 2025.12.1
 		}
 
 		public static double ToDouble(string str, double minval, double maxval)
 		{
-			return ToDouble(str, minval, maxval, minval); // / ///// // ////// /////// ////// ///// /////////
+			return ToDouble(str, minval, maxval, minval); // ★ ToInt 系の defval のデフォルトは minval とする。@ 2025.12.1
 		}
 
 		public static int ToInt(string str, int minval, int maxval, int defval)
@@ -1737,7 +1840,7 @@ namespace HLTStudio.Commons
 				int value = int.Parse(str);
 
 				if (value < minval || maxval < value)
-					throw new GotoCatchException();
+					throw null; // goto catch
 
 				return value;
 			}
@@ -1754,7 +1857,7 @@ namespace HLTStudio.Commons
 				long value = long.Parse(str);
 
 				if (value < minval || maxval < value)
-					throw new GotoCatchException();
+					throw null; // goto catch
 
 				return value;
 			}
@@ -1773,7 +1876,7 @@ namespace HLTStudio.Commons
 				CheckNaN(value);
 
 				if (value < minval || maxval < value)
-					throw new GotoCatchException();
+					throw null; // goto catch
 
 				return value;
 			}
@@ -1783,29 +1886,23 @@ namespace HLTStudio.Commons
 			}
 		}
 
-		public class GotoCatchException : Exception
-		{ }
-
-		public class Cancelled : Exception
-		{ }
-
-		#region ////////
+		#region UTF8Conv
 
 		public static class UTF8Conv
 		{
-			/// /////////
-			/// ///// ///// //////////
-			/// ///////////////
-			/// // //
-			/// /////////// /// ///////
-			/// // //
-			/// // ////
-			/// // ///// // //////// / /////////////
-			/// // ////// // ////////////
-			/// // //// // ///////////////////
-			/// //////////
-			/// ////// ///////////////////////
-			/// //////////////////////
+			/// <summary>
+			/// バイト列を UTF-8 の文字列に変換する。
+			/// 以下に該当する文字は除去する。
+			/// -- CR
+			/// 以下に該当しない文字は '?' に置き換える。
+			/// -- LF
+			/// -- '\t'
+			/// -- ASCII == '\u0020' + SCommon.ASCII
+			/// -- 半角カナ文字 == SCommon.KANA
+			/// -- 全角文字 == SCommon.GetJChars()
+			/// </summary>
+			/// <param name="src">バイト列</param>
+			/// <returns>文字列</returns>
 			public static string ToJString(byte[] src)
 			{
 				if (src == null)
@@ -1813,16 +1910,16 @@ namespace HLTStudio.Commons
 
 				int startPos = 0;
 
-				// / /// //
+				// ? BOM 有り
 				if (
 					3 <= src.Length &&
 					src[0] == 0xEF &&
 					src[1] == 0xBB &&
 					src[2] == 0xBF
 					)
-					startPos = 3; // /// ////////
+					startPos = 3; // BOM をスキップする。
 
-				src = SCommon.GetPart(src, startPos); // /// /// / ///////
+				src = SCommon.GetPart(src, startPos); // BOM の除去 & バイト列の複製
 				src = EraseCRIfNeeded(src);
 				ToFairUTF8Bytes(src);
 				return Encoding.UTF8.GetString(src);
@@ -1853,8 +1950,8 @@ namespace HLTStudio.Commons
 							if (src[r] != CR)
 								dest[w++] = src[r];
 
-						if (w != dest.Length) // ///
-							throw null; // /////
+						if (w != dest.Length) // 2bs
+							throw null; // never
 
 						return dest;
 					}
@@ -1877,7 +1974,7 @@ namespace HLTStudio.Commons
 						bytes.Length > 3 ||
 						bytes.Any(bChr => bChr == 0x00)
 						)
-						throw null; // /////
+						throw null; // never
 
 					int code = bytes[0];
 
@@ -1889,9 +1986,9 @@ namespace HLTStudio.Commons
 				return codeMap;
 			}
 
-			// ///// ///////////////////// ////////
-			// // / ///////// / /////// / /// ///////////////////
-			// // / ////////// / /////// / /// ///////
+			// memo: バイト列にゼロが含まれていても問題無い。@ 2024.2.3
+			// -- { 存在する文字コード + 0x00... } --> 存在する文字コードの時点でヒットする。
+			// -- { 存在しない文字コード + 0x00... } --> ヒットしない。
 
 			private static void ToFairUTF8Bytes(byte[] bytes)
 			{
@@ -1918,7 +2015,7 @@ namespace HLTStudio.Commons
 					}
 					if (!matched)
 					{
-						bytes[index] = 0x3f; // ///
+						bytes[index] = 0x3f; // '?'
 						index++;
 					}
 				}
@@ -1927,18 +2024,18 @@ namespace HLTStudio.Commons
 
 		#endregion
 
-		/// /////////
-		/// //////////////////////////
-		/// //////////////// // ////
-		/// //////////////////
-		/// /////////////////////////////////////////////////////////////////////////////
-		/// //////////
-		/// ////// //////////////////////
-		/// ////// //////////////////////////////////////
-		/// ////// /////////////////////////////
-		/// ////// ///////////////////////////////
-		/// ////// ///////////////////////////////
-		/// ///////////////////////////////////
+		/// <summary>
+		/// 文字列をSJIS(CP-932)の文字列に変換する。
+		/// 改行を許可する場合、改行コードは LF になる。
+		/// 以下の関数を踏襲した。(慣習的実装)
+		/// https://github.com/stackprobe/Factory/blob/master/Common/DataConv.c#L320-L388
+		/// </summary>
+		/// <param name="str">文字列</param>
+		/// <param name="okJpn">日本語(2バイト文字)を許可するか</param>
+		/// <param name="okRet">改行を許可するか</param>
+		/// <param name="okTab">水平タブを許可するか</param>
+		/// <param name="okSpc">半角空白を許可するか</param>
+		/// <returns>SJIS(CP-932)の文字列</returns>
 		public static string ToJString(string str, bool okJpn, bool okRet, bool okTab, bool okSpc)
 		{
 			if (str == null)
@@ -1947,12 +2044,12 @@ namespace HLTStudio.Commons
 			return ToJString(GetSJISBytes(str), okJpn, okRet, okTab, okSpc);
 		}
 
-		#region ////////////
+		#region GetSJISBytes
 
 		public static byte[] GetSJISBytes(string str)
 		{
-			byte[] B_HAN_QUES = new byte[] { 0x3f }; // ///
-			byte[] B_ZEN_QUES = new byte[] { 0x81, 0x48 }; // ///
+			byte[] B_HAN_QUES = new byte[] { 0x3f }; // '?'
+			byte[] B_ZEN_QUES = new byte[] { 0x81, 0x48 }; // '？'
 
 			using (MemoryStream dest = new MemoryStream())
 			{
@@ -1982,32 +2079,32 @@ namespace HLTStudio.Commons
 			{
 				byte[][] dest = new byte[0x10000][];
 
-				dest[0x09] = new byte[] { 0x09 }; // //
-				dest[0x0a] = new byte[] { 0x0a }; // //
-				dest[0x0d] = new byte[] { 0x0d }; // //
+				dest[0x09] = new byte[] { 0x09 }; // HT
+				dest[0x0a] = new byte[] { 0x0a }; // LF
+				dest[0x0d] = new byte[] { 0x0d }; // CR
 
-				for (int bChr = 0x20; bChr <= 0x7e; bChr++) // //////
+				for (int bChr = 0x20; bChr <= 0x7e; bChr++) // アスキー文字
 				{
 					dest[bChr] = new byte[] { (byte)bChr };
 				}
-				for (int bChr = 0xa1; bChr <= 0xdf; bChr++) // ////
+				for (int bChr = 0xa1; bChr <= 0xdf; bChr++) // 半角カナ
 				{
 					dest[SJISHanKanaToUnicodeHanKana(bChr)] = new byte[] { (byte)bChr };
 				}
 
-				// ////
+				// 全角文字
 				{
 					char[] unicodes = GetJChars().ToCharArray();
 
-					if (unicodes.Length * 2 != GetJCharBytes().Count()) // / /////////// /////////////
-						throw null; // /////
+					if (unicodes.Length * 2 != GetJCharBytes().Count()) // ? 文字数が合わない。-- サロゲートペアは無いはず！
+						throw null; // never
 
 					foreach (char unicode in unicodes)
 					{
 						byte[] bJChr = ENCODING_SJIS.GetBytes(new string(new char[] { unicode }));
 
-						if (bJChr.Length != 2) // / /////////
-							throw null; // /////
+						if (bJChr.Length != 2) // ? 全角文字じゃない。
+							throw null; // never
 
 						dest[(int)unicode] = bJChr;
 					}
@@ -2024,18 +2121,18 @@ namespace HLTStudio.Commons
 
 		#endregion
 
-		/// /////////
-		/// ///////////////////////////
-		/// //////////////// // ////
-		/// //////////////////
-		/// /////////////////////////////////////////////////////////////////////////////
-		/// //////////
-		/// ////// ///////////////////////
-		/// ////// //////////////////////////////////////
-		/// ////// /////////////////////////////
-		/// ////// ///////////////////////////////
-		/// ////// ///////////////////////////////
-		/// ///////////////////////////////////
+		/// <summary>
+		/// バイト列をSJIS(CP-932)の文字列に変換する。
+		/// 改行を許可する場合、改行コードは LF になる。
+		/// 以下の関数を踏襲した。(慣習的実装)
+		/// https://github.com/stackprobe/Factory/blob/master/Common/DataConv.c#L320-L388
+		/// </summary>
+		/// <param name="src">バイト列</param>
+		/// <param name="okJpn">日本語(2バイト文字)を許可するか</param>
+		/// <param name="okRet">改行を許可するか</param>
+		/// <param name="okTab">水平タブを許可するか</param>
+		/// <param name="okSpc">半角空白を許可するか</param>
+		/// <returns>SJIS(CP-932)の文字列</returns>
 		public static string ToJString(byte[] src, bool okJpn, bool okRet, bool okTab, bool okSpc)
 		{
 			if (src == null)
@@ -2049,45 +2146,45 @@ namespace HLTStudio.Commons
 				{
 					byte chr = src[index];
 
-					if (chr == 0x09) // / ////
+					if (chr == 0x09) // ? '\t'
 					{
 						if (!okTab)
 							continue;
 					}
-					else if (chr == 0x0a) // / ////
+					else if (chr == 0x0a) // ? '\n'
 					{
 						if (!okRet)
 							continue;
 					}
-					else if (chr < 0x20) // / ///// /////// ////
+					else if (chr < 0x20) // ? other control code
 					{
 						continue;
 					}
-					else if (chr == 0x20) // / / /
+					else if (chr == 0x20) // ? ' '
 					{
 						if (!okSpc)
 							continue;
 					}
-					else if (chr <= 0x7e) // / /////
+					else if (chr <= 0x7e) // ? ascii
 					{
-						// ////
+						// none
 					}
-					else if (0xa1 <= chr && chr <= 0xdf) // / ////
+					else if (0xa1 <= chr && chr <= 0xdf) // ? kana
 					{
 						if (!okJpn)
 							continue;
 					}
-					else // / /////// // //
+					else // ? 全角文字の前半 || 破損
 					{
 						if (!okJpn)
 							continue;
 
 						index++;
 
-						if (src.Length <= index) // / ////
+						if (src.Length <= index) // ? 後半欠損
 							break;
 
-						if (!JCharCodes.I.Contains(chr, src[index])) // / //
+						if (!JCharCodes.I.Contains(chr, src[index])) // ? 破損
 							continue;
 
 						dest.WriteByte(chr);
@@ -2098,45 +2195,45 @@ namespace HLTStudio.Commons
 				bRet = dest.ToArray();
 			}
 
-			// ///// / //////////
-			// ////////////////////////////////////////////////
+			// added @ 2024.11.18
+			// 空文字列ではない文字列が空文字列に変換されることは想定されないかもしれないので、これを回避する。
 			{
 				if (src.Length != 0 && bRet.Length == 0)
 				{
-					bRet = new byte[] { 0x3f }; // ///
+					bRet = new byte[] { 0x3f }; // '?'
 				}
 			}
 
 			return ENCODING_SJIS.GetString(bRet);
 		}
 
-		// ///// //////////////////////////
-		// // ////////////
-		// //// ////////////////////////// // ///////////////////////////////
+		// memo: SJIS(CP-932)の中にサロゲートペアは無い。
+		// -- なので以下は保証される。
+		// ---- SCommon.GetJChars().Length == SCommon.GetJCharCodes().Count()
 
-		// ///// //////////////////////////
-		// //////////////////////
-		// // //// //////// ///////
-		// // //// //////// /////// //////// //////////////////////////////
-		// ///////////////////////////
-		// // /////// //////// ////
-		// //// /////////////////////////////////
+		// memo: GetJCharCodes()で得られる文字について
+		// SJISから見ると以下の変換パターンがある。
+		// -- SJIS <<---->> Unicode
+		// -- SJIS ------>> Unicode <<---->> SJIS(GetJCharCodes()に含まれる別の文字)
+		// Unicodeから見ると以下の変換パターンのみがある。
+		// -- Unicode <<---->> SJIS
+		// see: 20230509_01_SJIS2Unicode2SJIS.txt
 
-		/// /////////
-		/// /////////////////////////
-		/// /////////////////
-		/// //////////
-		/// //////////////////////////////////////////
+		/// <summary>
+		/// SJIS(CP-932)の2バイト文字を全て返す。
+		/// 戻り値の文字コード：Unicode
+		/// </summary>
+		/// <returns>SJIS(CP-932)の2バイト文字の文字列</returns>
 		public static string GetJChars()
 		{
 			return ENCODING_SJIS.GetString(GetJCharBytes().ToArray());
 		}
 
-		/// /////////
-		/// /////////////////////////
-		/// //////////////
-		/// //////////
-		/// ///////////////////////////////////////////
+		/// <summary>
+		/// SJIS(CP-932)の2バイト文字を全て返す。
+		/// 戻り値の文字コード：SJIS
+		/// </summary>
+		/// <returns>SJIS(CP-932)の2バイト文字のバイト列</returns>
 		public static IEnumerable<byte> GetJCharBytes()
 		{
 			foreach (UInt16 code in GetJCharCodes())
@@ -2146,11 +2243,11 @@ namespace HLTStudio.Commons
 			}
 		}
 
-		/// /////////
-		/// /////////////////////////
-		/// //////////////
-		/// //////////
-		/// /////////////////////////////////////////
+		/// <summary>
+		/// SJIS(CP-932)の2バイト文字を全て返す。
+		/// 戻り値の文字コード：SJIS
+		/// </summary>
+		/// <returns>SJIS(CP-932)の2バイト文字の列挙</returns>
 		public static IEnumerable<UInt16> GetJCharCodes()
 		{
 			for (UInt16 code = JCharCodes.CODE_MIN; code <= JCharCodes.CODE_MAX; code++)
@@ -2158,9 +2255,9 @@ namespace HLTStudio.Commons
 					yield return code;
 		}
 
-		/// /////////
-		/// //////////////////////
-		/// //////////
+		/// <summary>
+		/// SJIS(CP-932)の2バイト文字クラス
+		/// </summary>
 		private class JCharCodes
 		{
 			private static Lazy<JCharCodes> _i = new Lazy<JCharCodes>(() => new JCharCodes());
@@ -2183,11 +2280,11 @@ namespace HLTStudio.Commons
 			public const UInt16 CODE_MIN = 0x8140;
 			public const UInt16 CODE_MAX = 0xfc4b;
 
-			#region //////
+			#region AddAll
 
-			/// /////////
-			/// ///////// // ////////////////////////////////////////////////////////////////////////
-			/// //////////
+			/// <summary>
+			/// generated by https://github.com/stackprobe/Factory/blob/master/Labo/GenData/IsJChar.c
+			/// </summary>
 			private void AddAll()
 			{
 				this.Add(0x8140, 0x817e);
@@ -2399,7 +2496,7 @@ namespace HLTStudio.Commons
 
 		public class XORShift
 		{
-			private const ulong DEF_SEED = 88172645463325252UL; // ////////// // /////// / //////////
+			private const ulong DEF_SEED = 88172645463325252UL; // 良いとされるシード値 by ChatGPT @ 2025.10.31
 			private ulong _x;
 
 			public static XORShift CreateSafe(ulong seed)
@@ -2425,7 +2522,7 @@ namespace HLTStudio.Commons
 			}
 		}
 
-		public class EzEnc
+		public class EzEnc // Not a secure cipher!
 		{
 			private string Pw;
 
@@ -2475,9 +2572,9 @@ namespace HLTStudio.Commons
 			}
 		}
 
-		#region /////////////////
+		#region CryptographicHash
 
-		#region ///
+		#region MD5
 
 		public static byte[] GetMD5(byte[] src)
 		{
@@ -2504,19 +2601,19 @@ namespace HLTStudio.Commons
 			return GetCryptographicHashFile(CreateMD5, file);
 		}
 
-		public static string GetMD5String(byte[] src) // //// ///////////////////
+		public static string GetMD5String(byte[] src) // ret: ★a-fを小文字で返すことを保証する。
 		{
 			return GetCryptographicHashString(CreateMD5, src);
 		}
 
-		public static string GetMD5StringFile(string file) // //// ///////////////////
+		public static string GetMD5StringFile(string file) // ret: ★a-fを小文字で返すことを保証する。
 		{
 			return GetCryptographicHashStringFile(CreateMD5, file);
 		}
 
 		#endregion
 
-		#region //////
+		#region SHA256
 
 		public static byte[] GetSHA256(byte[] src)
 		{
@@ -2543,19 +2640,19 @@ namespace HLTStudio.Commons
 			return GetCryptographicHashFile(CreateSHA256, file);
 		}
 
-		public static string GetSHA256String(byte[] src) // //// ///////////////////
+		public static string GetSHA256String(byte[] src) // ret: ★a-fを小文字で返すことを保証する。
 		{
 			return GetCryptographicHashString(CreateSHA256, src);
 		}
 
-		public static string GetSHA256StringFile(string file) // //// ///////////////////
+		public static string GetSHA256StringFile(string file) // ret: ★a-fを小文字で返すことを保証する。
 		{
 			return GetCryptographicHashStringFile(CreateSHA256, file);
 		}
 
 		#endregion
 
-		#region //////
+		#region SHA512
 
 		public static byte[] GetSHA512(byte[] src)
 		{
@@ -2582,12 +2679,12 @@ namespace HLTStudio.Commons
 			return GetCryptographicHashFile(CreateSHA512, file);
 		}
 
-		public static string GetSHA512String(byte[] src) // //// ///////////////////
+		public static string GetSHA512String(byte[] src) // ret: ★a-fを小文字で返すことを保証する。
 		{
 			return GetCryptographicHashString(CreateSHA512, src);
 		}
 
-		public static string GetSHA512StringFile(string file) // //// ///////////////////
+		public static string GetSHA512StringFile(string file) // ret: ★a-fを小文字で返すことを保証する。
 		{
 			return GetCryptographicHashStringFile(CreateSHA512, file);
 		}
@@ -2655,12 +2752,12 @@ namespace HLTStudio.Commons
 			}
 		}
 
-		private static string GetCryptographicHashString(Func<HashAlgorithm> createHA, byte[] src) // //// ///////////////////
+		private static string GetCryptographicHashString(Func<HashAlgorithm> createHA, byte[] src) // ret: ★a-fを小文字で返すことを保証する。
 		{
 			return SCommon.Hex.I.GetString(SCommon.GetCryptographicHash(createHA, src));
 		}
 
-		private static string GetCryptographicHashStringFile(Func<HashAlgorithm> createHA, string file) // //// ///////////////////
+		private static string GetCryptographicHashStringFile(Func<HashAlgorithm> createHA, string file) // ret: ★a-fを小文字で返すことを保証する。
 		{
 			return SCommon.Hex.I.GetString(SCommon.GetCryptographicHashFile(createHA, file));
 		}
@@ -2845,7 +2942,7 @@ namespace HLTStudio.Commons
 
 			private Regex REGEX_HEX_STRING = new Regex("^([0-9A-Fa-f]{2})*$");
 
-			public string GetString(byte[] src) // //// ///////////////////
+			public string GetString(byte[] src) // ret: ★a-fを小文字で返すことを保証する。
 			{
 				if (src == null)
 					throw new Exception("不正な入力バイト列");
@@ -2917,7 +3014,7 @@ namespace HLTStudio.Commons
 		{
 			get
 			{
-				return GetString_SJISHalfRange(0x21, 0x7e); // //////////////////
+				return GetString_SJISHalfRange(0x21, 0x7e); // 空白(0x20)を含まないことに注意
 			}
 		}
 
@@ -2933,7 +3030,7 @@ namespace HLTStudio.Commons
 		{
 			get
 			{
-				return ASCII + KANA; // //////////////////
+				return ASCII + KANA; // 空白(0x20)を含まないことに注意
 			}
 		}
 
@@ -2988,7 +3085,7 @@ namespace HLTStudio.Commons
 			}
 		}
 
-		public static string MBC_ASCII // ////////////////////
+		public static string MBC_ASCII // 空白(0x3000)を含まないことに注意
 		{
 			get
 			{
@@ -2996,14 +3093,14 @@ namespace HLTStudio.Commons
 			}
 		}
 
-		#region //////////// ///////////
+		#region ToAsciiFull, ToAsciiHalf
 
-		/// /////////
-		/// ///////////////////////////////////////
-		/// //////////////
-		/// //////////
-		/// ////// //////////////////////
-		/// //////////////////////////
+		/// <summary>
+		/// 文字列中のアスキーコードの文字(0x20～0x7e)を半角から全角に変換する。
+		/// それ以外の文字は変換しない。
+		/// </summary>
+		/// <param name="str">文字列</param>
+		/// <returns>変換後の文字列</returns>
 		public static string ToAsciiFull(string str)
 		{
 			char[] buff = new char[str.Length];
@@ -3014,12 +3111,12 @@ namespace HLTStudio.Commons
 			return new string(buff);
 		}
 
-		/// /////////
-		/// ///////////////////////////////////////
-		/// //////////////
-		/// //////////
-		/// ////// //////////////////////
-		/// //////////////////////////
+		/// <summary>
+		/// 文字列中のアスキーコードの文字(0x20～0x7e)を全角から半角に変換する。
+		/// それ以外の文字は変換しない。
+		/// </summary>
+		/// <param name="str">文字列</param>
+		/// <returns>変換後の文字列</returns>
 		public static string ToAsciiHalf(string str)
 		{
 			char[] buff = new char[str.Length];
@@ -3030,12 +3127,12 @@ namespace HLTStudio.Commons
 			return new string(buff);
 		}
 
-		/// /////////
-		/// //////////////////////////////////
-		/// ///////////////
-		/// //////////
-		/// ////// /////////////////////
-		/// /////////////////////////
+		/// <summary>
+		/// アスキーコードの文字(0x20～0x7e)を半角から全角に変換する。
+		/// それ以外の文字はそのまま返す。
+		/// </summary>
+		/// <param name="chr">文字</param>
+		/// <returns>変換後の文字</returns>
 		public static char ToAsciiFull(char chr)
 		{
 			if (chr == (char)0x20)
@@ -3049,12 +3146,12 @@ namespace HLTStudio.Commons
 			return chr;
 		}
 
-		/// /////////
-		/// //////////////////////////////////
-		/// ///////////////
-		/// //////////
-		/// ////// /////////////////////
-		/// /////////////////////////
+		/// <summary>
+		/// アスキーコードの文字(0x20～0x7e)を全角から半角に変換する。
+		/// それ以外の文字はそのまま返す。
+		/// </summary>
+		/// <param name="chr">文字</param>
+		/// <returns>変換後の文字</returns>
 		public static char ToAsciiHalf(char chr)
 		{
 			if (chr == (char)0x3000)
@@ -3077,7 +3174,7 @@ namespace HLTStudio.Commons
 
 		public static int Comp(string a, string b)
 		{
-			// ///// ////////////// // ////////////////////////
+			// memo: a.CompareTo(b) -- カルチャ依存文字列比較問題を避けるため使わない。
 
 			return Comp(a.ToCharArray(), b.ToCharArray(), Comp);
 		}
@@ -3127,6 +3224,30 @@ namespace HLTStudio.Commons
 			return str.ToLower().IndexOf(char.ToLower(chr), startIndex);
 		}
 
+		public static int IndexOf(IList<string> strs, string str)
+		{
+			return IndexOf(strs, str, 0);
+		}
+
+		public static int IndexOf(IList<string> strs, string str, int index)
+		{
+			return IndexOf(strs, str, index, strs.Count - index);
+		}
+
+		public static int IndexOf(IList<string> strs, string str, int index, int count)
+		{
+			return IndexOf_Main(strs, str, index, index + count);
+		}
+
+		private static int IndexOf_Main(IList<string> strs, string str, int startIndex, int endIndex)
+		{
+			for (int index = startIndex; index < endIndex; index++)
+				if (strs[index] == str)
+					return index;
+
+			return -1; // not found
+		}
+
 		public static int IndexOfIgnoreCase(IList<string> strs, string str)
 		{
 			return IndexOfIgnoreCase(strs, str, 0);
@@ -3150,7 +3271,7 @@ namespace HLTStudio.Commons
 				if (strs[index].ToLower() == lwrStr)
 					return index;
 
-			return -1; // /// /////
+			return -1; // not found
 		}
 
 		public static string ReplaceIgnoreCase(string str, string oldPtn, string newPtn)
@@ -3175,15 +3296,15 @@ namespace HLTStudio.Commons
 			return buff.Append(str).ToString();
 		}
 
-		/// /////////
-		/// ///////////////
-		/// //////////
-		/// ////// //////////////////////
-		/// ////// //////////////////////////////////
-		/// ////// ////////////////////////////////////////////////////////
-		/// ////// //////////////////////////////////////////
-		/// ////// ///////////////////////// // // ///////////
-		/// /////////////////////////
+		/// <summary>
+		/// 文字列を区切り文字で分割する。
+		/// </summary>
+		/// <param name="str">文字列</param>
+		/// <param name="delimiters">区切り文字の集合</param>
+		/// <param name="meaningFlag">区切り文字(delimiters)以外を区切り文字とするか</param>
+		/// <param name="ignoreEmpty">空文字列のトークンを除去するか</param>
+		/// <param name="limit">最大トークン数(2～), -1 == 無制限</param>
+		/// <returns>トークン配列</returns>
 		public static string[] Tokenize(string str, string delimiters, bool meaningFlag = false, bool ignoreEmpty = false, int limit = -1)
 		{
 			List<string> tokens = new List<string>();
@@ -3209,15 +3330,15 @@ namespace HLTStudio.Commons
 			return tokens.ToArray();
 		}
 
-		/// /////////
-		/// ///////////////
-		/// //////////
-		/// ////// //////////////////////
-		/// ////// //////////////////////////////
-		/// ////// /////////////////////////////////////////////
-		/// ////// //////////////////////////////////////////
-		/// ////// ///////////////////////// // // ///////////
-		/// /////////////////////////
+		/// <summary>
+		/// 文字列をセパレータで分割する。
+		/// </summary>
+		/// <param name="str">文字列</param>
+		/// <param name="separator">セパレータ</param>
+		/// <param name="ignoreCase">セパレータの大文字小文字を区別しないか</param>
+		/// <param name="ignoreEmpty">空文字列のトークンを除去するか</param>
+		/// <param name="limit">最大トークン数(2～), -1 == 無制限</param>
+		/// <returns>トークン配列</returns>
 		public static string[] Separate(string str, string separator, bool ignoreCase = false, bool ignoreEmpty = false, int limit = -1)
 		{
 			List<string> tokens = new List<string>();
@@ -3264,7 +3385,7 @@ namespace HLTStudio.Commons
 				)
 				throw new Exception("Bad replacements");
 
-			// //////////
+			// ignoreCase
 
 			int rPCount = replacements.Length / 2;
 
@@ -3284,53 +3405,67 @@ namespace HLTStudio.Commons
 			return ignoreCase ? str.ReplaceIgnoreCase(oldPtn, newPtn) : str.Replace(oldPtn, newPtn);
 		}
 
-		// ////////// ///
-
-		public static string GetCUID() // ///////////////// ////// //
+		public static string FirstNotEmpty(params string[] strs)
 		{
-			// /// / //////////////// / /// /// // // // / // / // //////
-			//       ////////////////
-			//       /// / // / / / // /
+			foreach (string str in strs)
+				if (!string.IsNullOrEmpty(str))
+					return str;
+
+			throw null; // never
+		}
+
+		public static string FirstTrimmedNonEmpty(params string[] strs)
+		{
+			return FirstNotEmpty(strs.Select(str => (str ?? "").Trim()).ToArray());
+		}
+
+		// 独自ユニークID生成 >>>
+
+		public static string GetCUID() // Cryptographically Unique ID
+		{
+			// '{' + 240-bit-CRnd-B32 + '}' ... 50 文字 (1 + 48 + 1) ★全て大文字
+			//       ~~~~~~~~~~~~~~~~
+			//       (30 / 5) * 8 = 48 桁
 			//
 			return $"{{{GetCUID_NB()}}}";
 		}
 
-		public static string GetCUID_NB() // ///////////////// ////// // //// //////////
+		public static string GetCUID_NB() // Cryptographically Unique ID with No-Bracket
 		{
-			//       //////////////// /// // // //////
-			//       ////////////////
-			//       /// / // / / / // /
+			//       240-bit-CRnd-B32 ... 48 文字 ★全て大文字
+			//       ~~~~~~~~~~~~~~~~
+			//       (30 / 5) * 8 = 48 桁
 			//
 			return SCommon.Base32.I.Encode(SCommon.CRandom.GetBytes(30));
 		}
 
-		public static string GetTUID() // /////////// ////// //
+		public static string GetTUID() // Time-sorted Unique ID
 		{
-			// /// / /////////////////// / /// / /// / //////////////// / /// /// // // // / // / / / / / // / // //////
-			//       ///////////////////   ///         ////////////////
-			//       /                     /           /// / // / / / // /
-			//       /                     ////////
-			//       //////////// / ////////// //////////// /// /////////////////////////
-			//       ////////////
-			//       // /
+			// '{' + epoch-time-millis-x + HHH + '-' + 120-bit-CRnd-B32 + '}' ... 42 文字 (1 + 12 + 3 + 1 + 24 + 1) ★全て大文字
+			//       ~~~~~~~~~~~~~~~~~~~   ~~~         ~~~~~~~~~~~~~~~~
+			//       |                     |           (15 / 5) * 8 = 24 桁
+			//       |                     調整ｶｳﾝﾀ3桁
+			//       E677D21FDBFF = 9999/12/31 23:59:59.999 UTC (DateTimeOffset.MaxValue)
+			//       ~~~~~~~~~~~~
+			//       12 桁
 			//
 			return $"{{{GetTUID_NB()}}}";
 		}
 
-		public static string GetTUID_NB() // /////////// ////// // //// //////////
+		public static string GetTUID_NB() // Time-sorted Unique ID with No-Bracket
 		{
-			//       /////////////////// / /// / /// / //////////////// /// // // /// / / / / / /// //////
-			//       ///////////////////   ///         ////////////////
-			//       /                     /           /// / // / / / // /
-			//       /                     ////////
-			//       //////////// / ////////// //////////// /// /////////////////////////
-			//       ////////////
-			//       // /
+			//       epoch-time-millis-x + HHH + '-' + 120-bit-CRnd-B32 ... 40 文字 (12 + 3 + 1 + 24) ★全て大文字
+			//       ~~~~~~~~~~~~~~~~~~~   ~~~         ~~~~~~~~~~~~~~~~
+			//       |                     |           (15 / 5) * 8 = 24 桁
+			//       |                     調整ｶｳﾝﾀ3桁
+			//       E677D21FDBFF = 9999/12/31 23:59:59.999 UTC (DateTimeOffset.MaxValue)
+			//       ~~~~~~~~~~~~
+			//       12 桁
 			//
 			return $"{SCommon.GetEpochTimeMillis_HHH_ForID():X15}-{SCommon.Base32.I.Encode(SCommon.CRandom.GetBytes(15))}";
 		}
 
-		// /// //////////
+		// <<< 独自ユニークID生成
 
 		private static long LastEpochTimeMillis_HHH_ForID = -1L;
 
@@ -3347,10 +3482,10 @@ namespace HLTStudio.Commons
 
 		private static long GetEpochTimeMillis_HHH()
 		{
-			return GetEpochTimeMillis() * 4096;
+			return GetEpochTimeMillis() * 4096; // memo: カンストするのは、ざっくり西暦 7.1 万年ごろ (2.9 億 / 4096 ≒ 7.1 万)
 		}
 
-		// /////////// ///
+		// 標準化ユニークID生成 >>>
 
 		public static string GetUUIDv4()
 		{
@@ -3420,7 +3555,7 @@ namespace HLTStudio.Commons
 			});
 		}
 
-		// /// ///////////
+		// <<< 標準化ユニークID生成
 
 		private static char[] CROCKFORD_BASE32_CHARS = (SCommon.DECIMAL + SCommon.ALPHA_UPPER)
 			.Where(chr => !"ILOU".Contains(chr))
@@ -3441,13 +3576,13 @@ namespace HLTStudio.Commons
 
 		private static long GetEpochTimeMillis()
 		{
-			return DateTimeOffset.Now.ToUnixTimeMilliseconds();
+			return DateTimeOffset.Now.ToUnixTimeMilliseconds(); // memo: カンストするのは、ざっくり西暦 2.9 億年ごろ
 		}
 
 		private static long LastUniqueTimeStamp = -1L;
 
-		// /////////////////////
-		// ///////////////////////////////
+		// タイムスタンプ「もどき」であることに注意！
+		// 13～月、32～日、24～時、60～分、60～秒などありえる。
 		//
 		public static long GetUniqueTimeStamp()
 		{
@@ -3480,8 +3615,8 @@ namespace HLTStudio.Commons
 			return GetSame(str.ToCharArray(), (a, b) => a == b);
 		}
 
-		// ///// / //////////
-		// /////////////// /////////////// /////// // ///// ////////////////////// ///// ////////////////////
+		// memo: @ 2022.10.31
+		// vs2010で同じ名前にすると Comparision<T>, Func<T, T, bool> の型推論に失敗するので、*SameComp, *Same とした。vs2022では問題無いみたい。
 
 		public static bool HasSameComp<T>(IList<T> list, Comparison<T> comp)
 		{
@@ -3519,16 +3654,16 @@ namespace HLTStudio.Commons
 		{
 			for (int l = 0; l < list.Count; l++)
 				for (int r = l + 1; r < list.Count; r++)
-					if (!routine(list[l], list[r])) // / //
+					if (!routine(list[l], list[r])) // ? 中断
 						return;
 		}
 
-		public static void DistinctComp<T>(List<T> list, Comparison<T> comp) // ///// ///////// ///// //// ///// /////
+		public static void DistinctComp<T>(List<T> list, Comparison<T> comp) // list: 要素を削除するので IList ではなく List, ソート無し
 		{
 			Distinct(list, (a, b) => comp(a, b) == 0);
 		}
 
-		public static void Distinct<T>(List<T> list, Func<T, T, bool> match) // ///// ///////// ///// //// ///// /////
+		public static void Distinct<T>(List<T> list, Func<T, T, bool> match) // list: 要素を削除するので IList ではなく List, ソート無し
 		{
 			for (int l = 0; l < list.Count; l++)
 				for (int r = l + 1; r < list.Count; r++)
@@ -3536,7 +3671,7 @@ namespace HLTStudio.Commons
 						list.RemoveAt(r--);
 		}
 
-		public static void DistinctSort<T>(List<T> list, Comparison<T> comp) // ///// ///////// ///// //// ///// /////
+		public static void DistinctSort<T>(List<T> list, Comparison<T> comp) // list: 要素を削除するので IList ではなく List, ソート有り
 		{
 			if (list.Count < 2)
 				return;
@@ -3551,13 +3686,13 @@ namespace HLTStudio.Commons
 			list.RemoveRange(w, list.Count - w);
 		}
 
-		// ////
-		// ///////////   /// / ///// /// //// /
-		// ///////////// /// / /////// ///// ///// ///// ////// /
-		// /////////     /// / //////// ////////// /
-		// ///////////   /// / ////////// ///////////// ////////// //////////// /
+		// 戻り値：
+		// ParseIsland   --> { タグの前, タグ, タグの後 }
+		// ParseEnclosed --> { 開始タグの前, 開始タグ, タグの間, 終了タグ, 終了タグの後 }
+		// GetIsland     --> { タグの開始位置, タグの終了位置(*) }
+		// GetEnclosed   --> { 開始タグの開始位置, 開始タグの終了位置(*), 終了タグの開始位置, 終了タグの終了位置(*) }
 		//
-		// / //// // //////////
+		// * 終了位置 == 最後の文字の次の位置
 
 		public static string[] ParseIsland(string text, string singleTag, bool ignoreCase = false)
 		{
@@ -3645,10 +3780,10 @@ namespace HLTStudio.Commons
 			};
 		}
 
-		// ////////////////////////////////////////
-		// // /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+		// (Parse|Get)First(Island|Enclosed)の使い方メモ：
+		// -- https://github.com/stackprobe/notehub/blob/main/DevSourceRef/UsageExample_SCommon_FirstIslandEnclosed.md
 
-		public static string[] ParseFirstIsland(string text, out int tagIndex, params object[] tagTable) // ///////// /////////// //////////////
+		public static string[] ParseFirstIsland(string text, out int tagIndex, params object[] tagTable) // tagTable: (singleTag, ignoreCase)...
 		{
 			string[] firstSlnd = null;
 			tagIndex = -1;
@@ -3670,7 +3805,7 @@ namespace HLTStudio.Commons
 			return firstSlnd;
 		}
 
-		public static string[] ParseFirstEnclosed(string text, out int tagIndex, params object[] tagTable) // ///////// ///////// ///////// //////////////
+		public static string[] ParseFirstEnclosed(string text, out int tagIndex, params object[] tagTable) // tagTable: (openTag, closeTag, ignoreCase)...
 		{
 			string[] firstEncl = null;
 			tagIndex = -1;
@@ -3692,7 +3827,7 @@ namespace HLTStudio.Commons
 			return firstEncl;
 		}
 
-		public static int[] GetFirstIsland(string text, int startIndex, out int tagIndex, params object[] tagTable) // ///////// /////////// //////////////
+		public static int[] GetFirstIsland(string text, int startIndex, out int tagIndex, params object[] tagTable) // tagTable: (singleTag, ignoreCase)...
 		{
 			int[] firstSlnd = null;
 			tagIndex = -1;
@@ -3714,7 +3849,7 @@ namespace HLTStudio.Commons
 			return firstSlnd;
 		}
 
-		public static int[] GetFirstEnclosed(string text, int startIndex, out int tagIndex, params object[] tagTable) // ///////// ///////// ///////// //////////////
+		public static int[] GetFirstEnclosed(string text, int startIndex, out int tagIndex, params object[] tagTable) // tagTable: (openTag, closeTag, ignoreCase)...
 		{
 			int[] firstEncl = null;
 			tagIndex = -1;
@@ -3819,7 +3954,7 @@ namespace HLTStudio.Commons
 				count = (int)Math.Min((long)count, remaining);
 				count = reader(buff, offset, count);
 
-				if (count <= 0) // / //////////
+				if (count <= 0) // ? これ以上読み込めない
 					remaining = 0L;
 				else
 					remaining -= (long)count;
@@ -3866,7 +4001,7 @@ namespace HLTStudio.Commons
 
 			psi.FileName = file;
 			psi.Arguments = args;
-			psi.WorkingDirectory = workingDir; // /// // //
+			psi.WorkingDirectory = workingDir; // 既定値 == ""
 
 			switch (winStyle)
 			{
@@ -3892,7 +4027,7 @@ namespace HLTStudio.Commons
 			return Process.Start(psi);
 		}
 
-		#region //////
+		#region Base32
 
 		public class Base32
 		{
@@ -3983,18 +4118,18 @@ namespace HLTStudio.Commons
 				return new string(buff);
 			}
 
-			/// /////////
-			/// //////////////
-			/// /////////////////////////////////////////
-			/// //////////
-			/// ////// ////////////////////////
-			/// ///////////////////////
+			/// <summary>
+			/// Base32をデコードする。
+			/// 注意：入力文字列がでたらめな内容であっても、例外を投げずに何らかのバイト列を返す。
+			/// </summary>
+			/// <param name="str">入力文字列</param>
+			/// <returns>バイト列</returns>
 			public byte[] Decode(string str)
 			{
 				if (str == null)
 					str = "";
 
-				str = str.ToUpper(); // /////////
+				str = str.ToUpper(); // 小文字を許容する。
 				str = new string(str.Where(chr => (int)chr < CHAR_MAP_SIZE && this.CharMap[(int)chr] != -1).ToArray());
 
 				byte[] data;
@@ -4045,7 +4180,7 @@ namespace HLTStudio.Commons
 
 		#endregion
 
-		#region //////
+		#region Base64
 
 		public class Base64
 		{
@@ -4090,12 +4225,12 @@ namespace HLTStudio.Commons
 				return Convert.ToBase64String(data);
 			}
 
-			/// /////////
-			/// //////////////
-			/// /////////////////////////////////////////
-			/// //////////
-			/// ////// ////////////////////////
-			/// ///////////////////////
+			/// <summary>
+			/// Base64をデコードする。
+			/// 注意：入力文字列がでたらめな内容であっても、例外を投げずに何らかのバイト列を返す。
+			/// </summary>
+			/// <param name="str">入力文字列</param>
+			/// <returns>バイト列</returns>
 			public byte[] Decode(string str)
 			{
 				if (str == null)
@@ -4109,25 +4244,25 @@ namespace HLTStudio.Commons
 						break;
 
 					case 1:
-						str = str.Substring(0, str.Length - 1); // /////////////////
+						str = str.Substring(0, str.Length - 1); // 端数1はあり得ないので切り捨てる。
 						break;
 
 					case 2:
-						if (this.CharMap[(int)str[str.Length - 1]] % 16 != 0) // / /////////////////
+						if (this.CharMap[(int)str[str.Length - 1]] % 16 != 0) // ? 端数2のときのあり得ない最後の文字
 						{
-							str = str.Substring(0, str.Length - 2); // /////////
+							str = str.Substring(0, str.Length - 2); // 端数を切り捨てる。
 						}
 						break;
 
 					case 3:
-						if (this.CharMap[(int)str[str.Length - 1]] % 4 != 0) // / /////////////////
+						if (this.CharMap[(int)str[str.Length - 1]] % 4 != 0) // ? 端数3のときのあり得ない最後の文字
 						{
-							str = str.Substring(0, str.Length - 3); // /////////
+							str = str.Substring(0, str.Length - 3); // 端数を切り捨てる。
 						}
 						break;
 
 					default:
-						throw null; // /////
+						throw null; // never
 				}
 
 				str += new string(CHAR_PADDING, (4 - str.Length % 4) % 4);
@@ -4138,25 +4273,25 @@ namespace HLTStudio.Commons
 
 		#endregion
 
-		#region //////////////
+		#region TimeStampToSec
 
-		/// /////////
-		/// /// ///// //////// ////////////////////
-		/// /////////
-		/// // ///////////
-		/// // ////////////
-		/// // /////////////
-		/// // //////////////
-		/// // ///////////////
-		/// // ////////////////
-		/// // /////////////////
-		/// // //////////////////
-		/// // /////////////////// // // ///////// // ///////// / /////////
-		/// //// ///// / / / /
-		/// /////
-		/// // // ///// ////////
-		/// // // /////////////// ////////
-		/// //////////
+		/// <summary>
+		/// 日時を 1/1/1 00:00:00 からの経過秒数に変換およびその逆を行う。
+		/// 日時のフォーマット
+		/// -- YMMDDhhmmss
+		/// -- YYMMDDhhmmss
+		/// -- YYYMMDDhhmmss
+		/// -- YYYYMMDDhhmmss
+		/// -- YYYYYMMDDhhmmss
+		/// -- YYYYYYMMDDhhmmss
+		/// -- YYYYYYYMMDDhhmmss
+		/// -- YYYYYYYYMMDDhhmmss
+		/// -- YYYYYYYYYMMDDhhmmss -- 但し YYYYYYYYY == 100000000 ～ 922337203
+		/// ---- 年の桁数は 1 ～ 9 桁
+		/// 日時の範囲
+		/// -- 最小 1/1/1 00:00:00
+		/// -- 最大 922337203/12/31 23:59:59
+		/// </summary>
 		public static class TimeStampToSec
 		{
 			private const int YEAR_MIN = 1;
@@ -4165,16 +4300,16 @@ namespace HLTStudio.Commons
 			private const long TIME_STAMP_MIN = 10101000000L;
 			private const long TIME_STAMP_MAX = 9223372031231235959L;
 
-			private const long DEFAULT_SEC = 62135596800L; // // //////// ////////
+			private const long DEFAULT_SEC = 62135596800L; // == 1970/1/1 00:00:00
 
-			/// /////////
-			/// /// ///// //////// /////////////
-			/// /////////
-			/// // /////////// // /////// // /////
-			/// // ///////////////////// // //////// //////// /////////////
-			/// //////////
-			/// ////// ///////////////////////////
-			/// ///////////////////////
+			/// <summary>
+			/// 日時を 1/1/1 00:00:00 からの経過秒数に変換する。
+			/// 不正な日時の場合：
+			/// -- 日が月の日数より大きく 31 以下である場合 == 翌月扱い。
+			/// -- それ以外の不正な日時(範囲外の日時も含む) == 1970/1/1 00:00:00 に対応する経過秒数を返す。
+			/// </summary>
+			/// <param name="timeStamp">日時</param>
+			/// <returns>経過秒数</returns>
 			public static long ToSec(long timeStamp)
 			{
 				if (timeStamp < TIME_STAMP_MIN || TIME_STAMP_MAX < timeStamp)
@@ -4192,7 +4327,7 @@ namespace HLTStudio.Commons
 				int y = (int)(timeStamp / 100);
 
 				if (
-					/// / //////// // //////// / / //
+					//y < YEAR_MIN || YEAR_MAX < y ||
 					m < 1 || 12 < m ||
 					d < 1 || 31 < d ||
 					h < 0 || 23 < h ||
@@ -4238,14 +4373,14 @@ namespace HLTStudio.Commons
 				return ret;
 			}
 
-			/// /////////
-			/// ///// //////// ////////////////
-			/// ///////////
-			/// // /////////// //////////////////////////////// // /////////// /////////////
-			/// // ///////////////////// //////////////////////// // ///////////////////// /////////////
-			/// //////////
-			/// ////// ///////////////////////
-			/// /////////////////////
+			/// <summary>
+			/// 1/1/1 00:00:00 からの経過秒数を日時に変換する。
+			/// 不正な経過秒数の場合：
+			/// -- 最小の日時(1/1/1 00:00:00)より前の日時に対応する経過秒数(つまり負の値) == 最小の日時(1/1/1 00:00:00)を返す。
+			/// -- 最大の日時(922337203/12/31 23:59:59)より後の日時に対応する経過秒数 == 最大の日時(922337203/12/31 23:59:59)を返す。
+			/// </summary>
+			/// <param name="sec">経過秒数</param>
+			/// <returns>日時</returns>
 			public static long ToTimeStamp(long sec)
 			{
 				if (sec < 0L)
@@ -4298,14 +4433,14 @@ namespace HLTStudio.Commons
 					return TIME_STAMP_MAX;
 
 				if (
-					/// / //////// // //////// / / //
+					//y < YEAR_MIN || YEAR_MAX < y ||
 					m < 1 || 12 < m ||
 					d < 1 || 31 < d ||
 					h < 0 || 23 < h ||
 					m < 0 || 59 < m ||
 					s < 0 || 59 < s
 					)
-					throw null; // /////
+					throw null; // never
 
 				return
 					y * 10000000000L +
@@ -4316,9 +4451,9 @@ namespace HLTStudio.Commons
 					s;
 			}
 
-			// ////
-			// /////////
-			// ////
+			// ====
+			// ここから便利ツール
+			// ====
 
 			public static bool IsFairTimeStamp(long timeStamp)
 			{
@@ -4351,41 +4486,41 @@ namespace HLTStudio.Commons
 
 		#endregion
 
-		/// /////////
-		/// //////
-		/// /////////
-		/// // /// // ////////
-		/// // /// // ///// // //////////
-		/// // /// // ///// // //////////
-		/// // /// // ////////
-		/// //////////
-		/// ////////// /////////////////////////
-		/// ////// /////////////////////////
-		/// ////// /////////////////////////
-		/// ////// /////////////////////////////
-		/// ///////////////////////////
+		/// <summary>
+		/// マージする。
+		/// 出力リストの配列：
+		/// -- [0] == リスト1のみ存在
+		/// -- [1] == 両方に存在 -- リスト1の要素を追加
+		/// -- [2] == 両方に存在 -- リスト2の要素を追加
+		/// -- [3] == リスト2のみ存在
+		/// </summary>
+		/// <typeparam name="T">任意の型</typeparam>
+		/// <param name="list1">リスト1</param>
+		/// <param name="list2">リスト2</param>
+		/// <param name="comp">要素の比較メソッド</param>
+		/// <returns>出力リストの配列</returns>
 		public static List<T>[] GetMerge<T>(IList<T> list1, IList<T> list2, Comparison<T> comp)
 		{
 			return GetMergeWithSort(
-				list1.ToArray(), // /////
-				list2.ToArray(), // /////
+				list1.ToArray(), // Clone
+				list2.ToArray(), // Clone
 				comp
 				);
 		}
 
-		/// /////////
-		/// //////// /////////////////
-		/// /////////
-		/// // /// // ////////
-		/// // /// // ///// // //////////
-		/// // /// // ///// // //////////
-		/// // /// // ////////
-		/// //////////
-		/// ////////// /////////////////////////
-		/// ////// ///////////////// // ////////////////////////
-		/// ////// ///////////////// // ////////////////////////
-		/// ////// /////////////////////////////
-		/// ///////////////////////////
+		/// <summary>
+		/// マージする。-- ★入力リストを自動的にソートする。
+		/// 出力リストの配列：
+		/// -- [0] == リスト1のみ存在
+		/// -- [1] == 両方に存在 -- リスト1の要素を追加
+		/// -- [2] == 両方に存在 -- リスト2の要素を追加
+		/// -- [3] == リスト2のみ存在
+		/// </summary>
+		/// <typeparam name="T">任意の型</typeparam>
+		/// <param name="list1">リスト1 -- ★自動的にソートすることに注意！</param>
+		/// <param name="list2">リスト2 -- ★自動的にソートすることに注意！</param>
+		/// <param name="comp">要素の比較メソッド</param>
+		/// <returns>出力リストの配列</returns>
 		public static List<T>[] GetMergeWithSort<T>(IList<T> list1, IList<T> list2, Comparison<T> comp)
 		{
 			List<T> only1 = new List<T>();
@@ -4404,22 +4539,22 @@ namespace HLTStudio.Commons
 			};
 		}
 
-		/// /////////
-		/// //////
-		/// //////////
-		/// ////////// /////////////////////////
-		/// ////// /////////////////////////
-		/// ////// /////////////////////////
-		/// ////// /////////////////////////////
-		/// ////// //////////////// // ////////////////
-		/// ////// //////////////// // ///// // //////////////////
-		/// ////// //////////////// // ///// // //////////////////
-		/// ////// //////////////// // ////////////////
+		/// <summary>
+		/// マージする。
+		/// </summary>
+		/// <typeparam name="T">任意の型</typeparam>
+		/// <param name="list1">リスト1</param>
+		/// <param name="list2">リスト2</param>
+		/// <param name="comp">要素の比較メソッド</param>
+		/// <param name="only1">出力先 -- リスト1のみ存在</param>
+		/// <param name="both1">出力先 -- 両方に存在 -- リスト1の要素を追加</param>
+		/// <param name="both2">出力先 -- 両方に存在 -- リスト2の要素を追加</param>
+		/// <param name="only2">出力先 -- リスト2のみ存在</param>
 		public static void Merge<T>(IList<T> list1, IList<T> list2, Comparison<T> comp, List<T> only1, List<T> both1, List<T> both2, List<T> only2)
 		{
 			MergeWithSort(
-				list1.ToArray(), // /////
-				list2.ToArray(), // /////
+				list1.ToArray(), // Clone
+				list2.ToArray(), // Clone
 				comp,
 				only1,
 				both1,
@@ -4428,17 +4563,17 @@ namespace HLTStudio.Commons
 				);
 		}
 
-		/// /////////
-		/// //////// /////////////////
-		/// //////////
-		/// ////////// /////////////////////////
-		/// ////// ///////////////// // ////////////////////////
-		/// ////// ///////////////// // ////////////////////////
-		/// ////// /////////////////////////////
-		/// ////// //////////////// // ////////////////
-		/// ////// //////////////// // ///// // //////////////////
-		/// ////// //////////////// // ///// // //////////////////
-		/// ////// //////////////// // ////////////////
+		/// <summary>
+		/// マージする。-- ★入力リストを自動的にソートする。
+		/// </summary>
+		/// <typeparam name="T">任意の型</typeparam>
+		/// <param name="list1">リスト1 -- ★自動的にソートすることに注意！</param>
+		/// <param name="list2">リスト2 -- ★自動的にソートすることに注意！</param>
+		/// <param name="comp">要素の比較メソッド</param>
+		/// <param name="only1">出力先 -- リスト1のみ存在</param>
+		/// <param name="both1">出力先 -- 両方に存在 -- リスト1の要素を追加</param>
+		/// <param name="both2">出力先 -- 両方に存在 -- リスト2の要素を追加</param>
+		/// <param name="only2">出力先 -- リスト2のみ存在</param>
 		public static void MergeWithSort<T>(IList<T> list1, IList<T> list2, Comparison<T> comp, List<T> only1, List<T> both1, List<T> both2, List<T> only2)
 		{
 			Sort(list1, comp);
@@ -4541,12 +4676,12 @@ namespace HLTStudio.Commons
 				list[index] = ivList[index].Value;
 		}
 
-		// //////////////////// ////
-		// /////////////////////////////
-		// ////////////
-		// /////////////////////
+		// SCommon.DistinctComp と同じく
+		// ・同一の要素についてリストの先頭に最も近い要素だけを残す。
+		// ・元の並び順を維持する。
+		// 但し、リストが長い場合はこちらの方が高速！
 		//
-		public static void DistinctBulk<T>(List<T> list, Comparison<T> comp) // ///// ///////// ///// //// ////
+		public static void DistinctBulk<T>(List<T> list, Comparison<T> comp) // list: 要素を削除するので IList ではなく List
 		{
 			int count = list.Count;
 
@@ -4569,7 +4704,7 @@ namespace HLTStudio.Commons
 				int ret = comp(a.Value, b.Value);
 
 				if (ret == 0)
-					ret = a.Index - b.Index; // /////////////////////////////////////
+					ret = a.Index - b.Index; // 先頭に近い方の要素を維持するため、元の並び順を第2ソートとする必要がある。
 
 				return ret;
 			});
@@ -4587,39 +4722,39 @@ namespace HLTStudio.Commons
 			list.RemoveRange(w, count - w);
 		}
 
-		/// /////////
-		/// ///////////////////////////
-		/// ////////////////////////
-		/// ///////
-		/// // //////////////////////
-		/// //// ////////// //// ///////
-		/// //// ////////// //// //////////
-		/// //// /////// // ///////
-		/// //// /////// //// //////////
-		/// //////////
-		/// ////////// /////////////////////////
-		/// ////// ////////////////////////////
-		/// ////// ///////////////////////////////
-		/// ////// //////////////////////////
-		/// /////////////////////////////////////
-		public static int GetIndex<T>(IList<T> list, T targetValue, Comparison<T> comp)
+		/// <summary>
+		/// リスト内の特定の位置をバイナリサーチによって取得する。
+		/// ★注意：指定されたリストを自動的にソートしない。
+		/// 比較メソッド：
+		/// -- 少なくとも以下のとおりの比較結果となること。
+		/// ---- 目的位置の左側の要素 &lt; 目的位置の要素
+		/// ---- 目的位置の左側の要素 &lt; 目的位置の右側の要素
+		/// ---- 目的位置の要素 == 目的位置の要素
+		/// ---- 目的位置の要素 &lt; 目的位置の右側の要素
+		/// </summary>
+		/// <typeparam name="T">要素の型</typeparam>
+		/// <param name="list">検索対象のリスト</param>
+		/// <param name="targetValue">目的の値</param>
+		/// <param name="comp">比較メソッド</param>
+		/// <returns>目的位置(見つからない場合(-1))</returns>
+		public static int GetIndex_BS<T>(IList<T> list, T targetValue, Comparison<T> comp)
 		{
-			return GetIndex(list, element => comp(element, targetValue));
+			return GetIndex_BS(list, element => comp(element, targetValue));
 		}
 
-		/// /////////
-		/// ///////////////////////////
-		/// ////////////////////////
-		/// ///////
-		/// // /////////////////////
-		/// // /////////////////////
-		/// // /////////// / ////
-		/// //////////
-		/// ////////// /////////////////////////
-		/// ////// ////////////////////////////
-		/// ////// //////////////////////////
-		/// /////////////////////////////////////
-		public static int GetIndex<T>(IList<T> list, Func<T, int> comp)
+		/// <summary>
+		/// リスト内の特定の位置をバイナリサーチによって取得する。
+		/// ★注意：指定されたリストを自動的にソートしない。
+		/// 判定メソッド：
+		/// -- 目的位置の左側の要素であれば負の値を返す。
+		/// -- 目的位置の右側の要素であれば正の値を返す。
+		/// -- 目的位置の要素であれば 0 を返す。
+		/// </summary>
+		/// <typeparam name="T">要素の型</typeparam>
+		/// <param name="list">検索対象のリスト</param>
+		/// <param name="comp">判定メソッド</param>
+		/// <returns>目的位置(見つからない場合(-1))</returns>
+		public static int GetIndex_BS<T>(IList<T> list, Func<T, int> comp)
 		{
 			int l = -1;
 			int r = list.Count;
@@ -4642,60 +4777,60 @@ namespace HLTStudio.Commons
 					return m;
 				}
 			}
-			return -1; // /// /////
+			return -1; // not found
 		}
 
-		/// /////////
-		/// ////////////////////////
-		/// //// ///// ////
-		/// /// //// ///// / //////// / // ///// //// ///////// //////// / / /////// / //////////// /// /
-		/// ///////////////////
-		/// ////////////////////////
-		/// ///////
-		/// // //////////////////////
-		/// //// //////// //// //////
-		/// //// //////// //// ////////
-		/// //// ////// // //////
-		/// //// ////// //// ////////
-		/// ///
-		/// // /// ///// / // / /
-		/// //// / // ///////////////////////////////// // ////
-		/// //// / // ///////////////////////////////// ////////// ////
-		/// //////////
-		/// ////////// /////////////////////////
-		/// ////// ////////////////////////////
-		/// ////// ////////////////////////////////
-		/// ////// //////////////////////////
-		/// /////////////////////
-		public static int[] GetRange<T>(IList<T> list, T targetValue, Comparison<T> comp)
+		/// <summary>
+		/// リスト内の範囲(開始位置と終了位置)を取得する。
+		/// 戻り値を range とすると
+		/// for (int index = range[0] + 1; index &lt; range[1]; index++) { T element = list[index]; ... }
+		/// と廻すことで範囲内の要素を走査できる。
+		/// ★注意：指定されたリストを自動的にソートしない。
+		/// 比較メソッド：
+		/// -- 少なくとも以下のとおりの比較結果となること。
+		/// ---- 範囲の左側の要素 &lt; 範囲内の要素
+		/// ---- 範囲の左側の要素 &lt; 範囲の右側の要素
+		/// ---- 範囲内の要素 == 範囲内の要素
+		/// ---- 範囲内の要素 &lt; 範囲の右側の要素
+		/// 範囲：
+		/// -- new int[] { l, r }
+		/// ---- l == 範囲の開始位置の一つ前の位置_リストの最初の要素が範囲内である場合 -1 となる。
+		/// ---- r == 範囲の終了位置の一つ後の位置_リストの最後の要素が範囲内である場合 list.Count となる。
+		/// </summary>
+		/// <typeparam name="T">要素の型</typeparam>
+		/// <param name="list">検索対象のリスト</param>
+		/// <param name="targetValue">範囲内の値</param>
+		/// <param name="comp">比較メソッド</param>
+		/// <returns>範囲</returns>
+		public static int[] GetRange_BS<T>(IList<T> list, T targetValue, Comparison<T> comp)
 		{
-			return GetRange(list, element => comp(element, targetValue));
+			return GetRange_BS(list, element => comp(element, targetValue));
 		}
 
-		// ////// // ///// / //////////
-		// //////////////// //////// / / // //////// ////
-		// //////////////// //////// / / / //////// //////////////////////
+		// zantei -- memo: @ 2025.10.20
+		// 範囲に該当する要素が無かった場合 range[0] + 1 == range[1] となる。
+		// ソートされたリストとして考えると range[0] + 1 ～ range[1] はその要素(要素群)を挿入すべき位置となる。
 
-		/// /////////
-		/// ////////////////////////
-		/// //// ///// ////
-		/// /// //// ///// / //////// / // ///// //// ///////// //////// / / /////// / //////////// /// /
-		/// ///////////////////
-		/// ////////////////////////
-		/// ///////
-		/// // ///////////////////
-		/// // ///////////////////
-		/// // ////////// / ////
-		/// ///
-		/// // /// ///// / // / /
-		/// //// / // ///////////////////////////////// // ////
-		/// //// / // ///////////////////////////////// ////////// ////
-		/// //////////
-		/// ////////// /////////////////////////
-		/// ////// ////////////////////////////
-		/// ////// //////////////////////////
-		/// /////////////////////
-		public static int[] GetRange<T>(IList<T> list, Func<T, int> comp)
+		/// <summary>
+		/// リスト内の範囲(開始位置と終了位置)を取得する。
+		/// 戻り値を range とすると
+		/// for (int index = range[0] + 1; index &lt; range[1]; index++) { T element = list[index]; ... }
+		/// と廻すことで範囲内の要素を走査できる。
+		/// ★注意：指定されたリストを自動的にソートしない。
+		/// 判定メソッド：
+		/// -- 範囲の左側の要素であれば負の値を返す。
+		/// -- 範囲の右側の要素であれば正の値を返す。
+		/// -- 範囲内の要素であれば 0 を返す。
+		/// 範囲：
+		/// -- new int[] { l, r }
+		/// ---- l == 範囲の開始位置の一つ前の位置_リストの最初の要素が範囲内である場合 -1 となる。
+		/// ---- r == 範囲の終了位置の一つ後の位置_リストの最後の要素が範囲内である場合 list.Count となる。
+		/// </summary>
+		/// <typeparam name="T">要素の型</typeparam>
+		/// <param name="list">検索対象のリスト</param>
+		/// <param name="comp">判定メソッド</param>
+		/// <returns>範囲</returns>
+		public static int[] GetRange_BS<T>(IList<T> list, Func<T, int> comp)
 		{
 			int l = -1;
 			int r = list.Count;
@@ -4715,15 +4850,15 @@ namespace HLTStudio.Commons
 				}
 				else
 				{
-					l = GetLeft(list, l, m, element => comp(element) < 0);
-					r = GetLeft(list, m, r, element => comp(element) == 0) + 1;
+					l = GRBS_GetLeft(list, l, m, element => comp(element) < 0);
+					r = GRBS_GetLeft(list, m, r, element => comp(element) == 0) + 1;
 					break;
 				}
 			}
 			return new int[] { l, r };
 		}
 
-		private static int GetLeft<T>(IList<T> list, int l, int r, Predicate<T> isLeft)
+		private static int GRBS_GetLeft<T>(IList<T> list, int l, int r, Predicate<T> isLeft)
 		{
 			while (l + 1 < r)
 			{
@@ -4742,8 +4877,8 @@ namespace HLTStudio.Commons
 			return l;
 		}
 
-		// ///////////////////////////
-		// // //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+		// KVArray(SortedArray)の使い方メモ：
+		// -- https://github.com/stackprobe/notehub/blob/main/DevSourceRef/UsageExample_SCommon_KVArray.md
 
 		public class SortedArray<T>
 		{
@@ -4753,7 +4888,7 @@ namespace HLTStudio.Commons
 			public SortedArray(IList<T> elements, Comparison<T> comp, bool elementsOwnership = false, bool alreadySorted = false)
 			{
 				if (!elementsOwnership)
-					elements = elements.ToArray(); // /////
+					elements = elements.ToArray(); // Clone
 
 				if (!alreadySorted)
 					SCommon.Sort(elements, comp);
@@ -4774,12 +4909,12 @@ namespace HLTStudio.Commons
 
 			public int UnsafeGetIndex(T key, Comparison<T> comp)
 			{
-				return SCommon.GetIndex(this.Elements, key, comp);
+				return SCommon.GetIndex_BS(this.Elements, key, comp);
 			}
 
 			public int[] UnsafeGetRange(T key, Comparison<T> comp)
 			{
-				return SCommon.GetRange(this.Elements, key, comp);
+				return SCommon.GetRange_BS(this.Elements, key, comp);
 			}
 
 			public T this[T key]
@@ -4885,7 +5020,7 @@ namespace HLTStudio.Commons
 			}
 		}
 
-		public static class Rows_m // ///////////
+		public static class Rows_m // 表行リスト用モジュール
 		{
 			public static T[][] ToRect<T>(T[][] rows, T defval)
 			{
@@ -4895,15 +5030,15 @@ namespace HLTStudio.Commons
 					)
 					throw new Exception("Bad rows");
 
-				// //////
+				// defval
 
 				int h = rows.Length;
 				if (h == 0)
-					return new T[][] { new T[] { defval } }; // //// // / / / / / ////
+					return new T[][] { new T[] { defval } }; // 高さゼロ -> { 1 x 1 } を返す。
 
 				int w = rows.Max(row => row.Length);
 				if (w == 0)
-					return new T[][] { new T[] { defval } }; // /// // / / / / / ////
+					return new T[][] { new T[] { defval } }; // 幅ゼロ -> { 1 x 1 } を返す。
 
 				T[][] destRows = new T[h][];
 
@@ -4924,13 +5059,13 @@ namespace HLTStudio.Commons
 				return destRows;
 			}
 
-			public static T[][] Twist<T>(T[][] rows) // //////////
+			public static T[][] Twist<T>(T[][] rows) // 行と列を入れ替える。
 			{
 				if (
 					rows == null ||
 					rows.Any(row => row == null) ||
-					rows.Length == 0 || rows[0].Length == 0 || // / // /////
-					rows.Skip(1).Any(row => row.Length != rows[0].Length) // / //// // /// /////////
+					rows.Length == 0 || rows[0].Length == 0 || // ? no cells
+					rows.Skip(1).Any(row => row.Length != rows[0].Length) // ? rows is not rectangle
 					)
 					throw new Exception("Bad rows");
 
@@ -4949,29 +5084,29 @@ namespace HLTStudio.Commons
 				return destRows;
 			}
 
-			public static T[][] Rotate90<T>(T[][] rows) // //////////////////////
+			public static T[][] Rotate90<T>(T[][] rows) // 時計回りに90度(反時計回りに270度)回転
 			{
-				rows = rows.ToArray(); // /////
+				rows = rows.ToArray(); // Clone
 				Array.Reverse(rows);
 				rows = Twist(rows);
 				return rows;
 			}
 
-			public static T[][] Rotate180<T>(T[][] rows) // ///////////////////////
+			public static T[][] Rotate180<T>(T[][] rows) // 時計回りに180度(反時計回りに180度)回転
 			{
 				rows = Rotate270(rows);
 				rows = Rotate270(rows);
 				return rows;
 			}
 
-			public static T[][] Rotate270<T>(T[][] rows) // //////////////////////
+			public static T[][] Rotate270<T>(T[][] rows) // 時計回りに270度(反時計回りに90度)回転
 			{
 				rows = Twist(rows);
 				Array.Reverse(rows);
 				return rows;
 			}
 
-			public static T[][] TrimTrailing<T>(T[][] rows_SRC, Predicate<T> matchToDelete) // ///////////////////
+			public static T[][] TrimTrailing<T>(T[][] rows_SRC, Predicate<T> matchToDelete) // 行終端・列終端の不要なセルを削除する。
 			{
 				List<List<T>> rows = rows_SRC.Select(row => row.ToList()).ToList();
 
@@ -4986,7 +5121,7 @@ namespace HLTStudio.Commons
 			}
 		}
 
-		public static class Csv_m // ////////////////////
+		public static class Csv_m // Csv(文字列の表行リスト)用モジュール
 		{
 			public static string[][] ToRect(string[][] rows)
 			{
@@ -5015,9 +5150,9 @@ namespace HLTStudio.Commons
 			Console.WriteLine("想定された例外：" + ToThrow(routine).Message);
 		}
 
-		#region ////////////
+		#region GetOutputDir
 
-		// ///////////// //////// //////// //////// /// ///////// //////
+		// 慣習的な無名の出力先である "C:\\1", "C:\\2", "C:\\3", ... "C:\\999" を取得する。
 
 		private static Lazy<string> OutputDir = new Lazy<string>(() => GetOutputDir_Once());
 
@@ -5079,8 +5214,8 @@ namespace HLTStudio.Commons
 			}
 		}
 
-		// ///////////////////////
-		// // //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+		// RESLinesTo*系メソッドの使い方メモ：
+		// -- https://github.com/stackprobe/notehub/blob/main/DevSourceRef/UsageExample_SCommon_RESLines.md
 
 		public static string[][] RESLinesToBlocks(string[] lines, Predicate<string> isSeparatorLine)
 		{
@@ -5152,7 +5287,7 @@ namespace HLTStudio.Commons
 		public static string[][] RESLinesToBlocks_HDR(string[] lines, Predicate<string> isHeaderLine)
 		{
 			List<List<string>> blocks = new List<List<string>>();
-			List<string> block = new List<string>(); // /////////////////////////
+			List<string> block = new List<string>(); // ファイルの先頭から最初のヘッダ行までは捨てられる。
 
 			foreach (string line in lines)
 			{
@@ -5280,9 +5415,9 @@ namespace HLTStudio.Commons
 			return root;
 		}
 
-		// ////////////// //// // //////// ///////////////////// //////////
+		// 入力支援(インテリセンス)で Comp より CombSort が優先されると使いにくいので箱に入れた。@ 2025.11.10
 		//
-		public static class Sort_m // /////////
+		public static class Sort_m // ソート系モジュール
 		{
 			public static void CombSort(int count, Action<int, int> swap, Func<int, int, int> comp)
 			{
@@ -5354,7 +5489,7 @@ namespace HLTStudio.Commons
 				)
 				throw new Exception("不正な引数");
 
-			if (size < 2) // / /////
+			if (size < 2) // ? ソート不要
 				return;
 
 			Sort_m.CombSort(size, i => list[offset + i], (a, b) => SCommon.Swap(list, offset + a, offset + b), comp);
@@ -5370,12 +5505,12 @@ namespace HLTStudio.Commons
 				)
 				throw new Exception("不正な引数");
 
-			if (size < 2) // / /////
+			if (size < 2) // ? ソート不要
 				return;
 
 			P_AS_IndexedValue<T>[] ivList = new P_AS_IndexedValue<T>[size];
 
-			for (int index = 0; index < size; index++) // /////
+			for (int index = 0; index < size; index++) // 取り出す。
 			{
 				ivList[index] = new P_AS_IndexedValue<T>()
 				{
@@ -5394,13 +5529,13 @@ namespace HLTStudio.Commons
 				return ret;
 			});
 
-			for (int index = 0; index < size; index++) // ////////
+			for (int index = 0; index < size; index++) // 元リストに戻す。
 			{
 				list[offset + index] = ivList[index].Value;
 			}
 		}
 
-		public static class OpenFile_m // /////////////////////
+		public static class OpenFile_m // ファイルストリームを開く用モジュール(仮)
 		{
 			public static FileStream OpenBinaryFileForRead(string file)
 			{
@@ -5432,9 +5567,122 @@ namespace HLTStudio.Commons
 				return new StreamWriter(file, true, encoding);
 			}
 		}
+
+		public static class OpenHandle_m
+		{
+			private const string NAME_PREFIX_LOCAL = "Local\\";
+			private const string NAME_PREFIX_GLOBAL = "Global\\";
+
+			public static Mutex Mutex(string name)
+			{
+				return new Mutex(false, NAME_PREFIX_LOCAL + name);
+			}
+
+			public static Mutex MutexGlobal(string name)
+			{
+				return new Mutex(false, NAME_PREFIX_GLOBAL + name, out bool createNew, CreateMutexSecurityFull());
+			}
+
+			public static EventWaitHandle NamedEvent(string name)
+			{
+				return new EventWaitHandle(false, EventResetMode.AutoReset, NAME_PREFIX_LOCAL + name);
+			}
+
+			public static EventWaitHandle NamedEventManual(string name)
+			{
+				return new EventWaitHandle(false, EventResetMode.ManualReset, NAME_PREFIX_LOCAL + name);
+			}
+
+			public static EventWaitHandle NamedEventGlobal(string name)
+			{
+				return new EventWaitHandle(false, EventResetMode.AutoReset, NAME_PREFIX_GLOBAL + name, out bool createNew, CreateEventWaitHandleSecurityFull());
+			}
+
+			public static EventWaitHandle NamedEventGlobalManual(string name)
+			{
+				return new EventWaitHandle(false, EventResetMode.ManualReset, NAME_PREFIX_GLOBAL + name, out bool createNew, CreateEventWaitHandleSecurityFull());
+			}
+
+			private static MutexSecurity CreateMutexSecurityFull()
+			{
+				MutexSecurity security = new MutexSecurity();
+
+				security.AddAccessRule(
+					new MutexAccessRule(
+						new SecurityIdentifier(
+							WellKnownSidType.WorldSid,
+							null
+							),
+						MutexRights.FullControl,
+						AccessControlType.Allow
+					)
+				);
+
+				return security;
+			}
+
+			private static EventWaitHandleSecurity CreateEventWaitHandleSecurityFull()
+			{
+				EventWaitHandleSecurity security = new EventWaitHandleSecurity();
+
+				security.AddAccessRule(
+					new EventWaitHandleAccessRule(
+						new SecurityIdentifier(
+							WellKnownSidType.WorldSid,
+							null
+							),
+						EventWaitHandleRights.FullControl,
+						AccessControlType.Allow
+					)
+				);
+
+				return security;
+			}
+		}
+
+		public static DateTime EffectiveTime(FileInfo fileInfo)
+		{
+			DateTime t1 = fileInfo.CreationTime;
+			DateTime t2 = fileInfo.LastWriteTime;
+
+			return t1 < t2 ? t2 : t1;
+		}
+
+		public static DateTime EffectiveTimeUtc(FileInfo fileInfo)
+		{
+			DateTime t1 = fileInfo.CreationTimeUtc;
+			DateTime t2 = fileInfo.LastWriteTimeUtc;
+
+			return t1 < t2 ? t2 : t1;
+		}
+
+		public static class TableSerializer
+		{
+			public static byte[] Encode(string[][] rows)
+			{
+				List<byte[]> bRows = new List<byte[]>();
+
+				foreach (string[] row in rows)
+				{
+					List<byte[]> bRow = new List<byte[]>();
+
+					foreach (string cell in row)
+						bRow.Add(Encoding.UTF8.GetBytes(cell));
+
+					bRows.Add(SCommon.SplittableJoin(bRow));
+				}
+				byte[] encodedData = SCommon.SplittableJoin(bRows);
+				return encodedData;
+			}
+
+			public static string[][] Decode(byte[] encodedData)
+			{
+				byte[][] bRows = SCommon.Split(encodedData);
+
+				return bRows.Select(bRow => SCommon.Split(bRow)
+					.Select(bCell => Encoding.UTF8.GetString(bCell)).ToArray())
+					.ToArray();
+			}
+		}
 	}
 }
-
-//
-// <<< Processed by SolutionConv
-//

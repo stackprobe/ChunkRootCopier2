@@ -1,23 +1,16 @@
-﻿// Processed by SolutionConv >>>
-//
-// 本ソースファイルは、公開時の所定の手続きとして一部のセンシティブな情報をマスキングしています。
-// 元データの機微に触れる可能性がある箇所を伏せ字化したものであり、
-// リリース版との処理内容に実質的な差異が生じない範囲で調整を加えています。
-//
-
-namespace HLTStudio
+﻿namespace HLTStudio
 {
 	partial class MainWin
 	{
-		/// /////////
-		/// /////////////
-		/// //////////
+		/// <summary>
+		/// 必要なデザイナー変数です。
+		/// </summary>
 		private System.ComponentModel.IContainer components = null;
 
-		/// /////////
-		/// ///////////////////////
-		/// //////////
-		/// ////// ///////////////////// //////////// ////////////// ///// ///////////
+		/// <summary>
+		/// 使用中のリソースをすべてクリーンアップします。
+		/// </summary>
+		/// <param name="disposing">マネージ リソースが破棄される場合 true、破棄されない場合は false です。</param>
 		protected override void Dispose(bool disposing)
 		{
 			if (disposing && (components != null))
@@ -27,12 +20,12 @@ namespace HLTStudio
 			base.Dispose(disposing);
 		}
 
-		#region /////// //// //////////////
+		#region Windows フォーム デザイナーで生成されたコード
 
-		/// /////////
-		/// ///// /////////////////////////
-		/// /// /////////////////
-		/// //////////
+		/// <summary>
+		/// デザイナー サポートに必要なメソッドです。このメソッドの内容を
+		/// コード エディターで変更しないでください。
+		/// </summary>
 		private void InitializeComponent()
 		{
 			this.components = new System.ComponentModel.Container();
@@ -48,15 +41,12 @@ namespace HLTStudio
 			this.G001 = new System.Windows.Forms.GroupBox();
 			this.BtnResetInstallDir = new System.Windows.Forms.Button();
 			this.BtnUninstall = new System.Windows.Forms.Button();
-			this.FormMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
-			this.FormMenu_ビルド番号をクリップボードにコピーする = new System.Windows.Forms.ToolStripMenuItem();
 			this.TxtInstallDirMenu.SuspendLayout();
 			this.MainPanel.SuspendLayout();
 			this.G001.SuspendLayout();
-			this.FormMenu.SuspendLayout();
 			this.SuspendLayout();
 			// 
-			// ////////////
+			// LMainMessage
 			// 
 			this.LMainMessage.AutoSize = true;
 			this.LMainMessage.Location = new System.Drawing.Point(40, 50);
@@ -65,7 +55,7 @@ namespace HLTStudio
 			this.LMainMessage.TabIndex = 0;
 			this.LMainMessage.Text = "「アプリケーション」をインストールします。";
 			// 
-			// /////////////
+			// TxtInstallDir
 			// 
 			this.TxtInstallDir.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
@@ -77,21 +67,21 @@ namespace HLTStudio
 			this.TxtInstallDir.TabIndex = 0;
 			this.TxtInstallDir.Text = "C:\\HLT\\Program";
 			// 
-			// /////////////////
+			// TxtInstallDirMenu
 			// 
 			this.TxtInstallDirMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.TxtInstallDirMenu_コピー});
 			this.TxtInstallDirMenu.Name = "TxtInstallDirMenu";
 			this.TxtInstallDirMenu.Size = new System.Drawing.Size(115, 26);
 			// 
-			// /////////////////////
+			// TxtInstallDirMenu_コピー
 			// 
 			this.TxtInstallDirMenu_コピー.Name = "TxtInstallDirMenu_コピー";
 			this.TxtInstallDirMenu_コピー.Size = new System.Drawing.Size(114, 22);
 			this.TxtInstallDirMenu_コピー.Text = "コピー(&C)";
 			this.TxtInstallDirMenu_コピー.Click += new System.EventHandler(this.TxtInstallDirMenu_コピー_Click);
 			// 
-			// /////////
+			// BtnBrowse
 			// 
 			this.BtnBrowse.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
 			this.BtnBrowse.Location = new System.Drawing.Point(550, 83);
@@ -102,7 +92,7 @@ namespace HLTStudio
 			this.BtnBrowse.UseVisualStyleBackColor = true;
 			this.BtnBrowse.Click += new System.EventHandler(this.BtnBrowse_Click);
 			// 
-			// //////////
+			// BtnInstall
 			// 
 			this.BtnInstall.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
 			this.BtnInstall.ForeColor = System.Drawing.Color.DarkBlue;
@@ -113,7 +103,7 @@ namespace HLTStudio
 			this.BtnInstall.Text = "インストール";
 			this.BtnInstall.Click += new System.EventHandler(this.BtnInstall_Click);
 			// 
-			// ////////////////
+			// CBCreateShortcut
 			// 
 			this.CBCreateShortcut.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
 			this.CBCreateShortcut.AutoSize = true;
@@ -126,7 +116,7 @@ namespace HLTStudio
 			this.CBCreateShortcut.Text = "デスクトップにショートカットを作成する";
 			this.CBCreateShortcut.UseVisualStyleBackColor = true;
 			// 
-			// /////////
+			// MainPanel
 			// 
 			this.MainPanel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
@@ -140,7 +130,7 @@ namespace HLTStudio
 			this.MainPanel.Size = new System.Drawing.Size(780, 380);
 			this.MainPanel.TabIndex = 0;
 			// 
-			// ////
+			// G001
 			// 
 			this.G001.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
@@ -155,7 +145,7 @@ namespace HLTStudio
 			this.G001.TabStop = false;
 			this.G001.Text = "インストール先";
 			// 
-			// //////////////////
+			// BtnResetInstallDir
 			// 
 			this.BtnResetInstallDir.Location = new System.Drawing.Point(50, 83);
 			this.BtnResetInstallDir.Name = "BtnResetInstallDir";
@@ -165,7 +155,7 @@ namespace HLTStudio
 			this.BtnResetInstallDir.UseVisualStyleBackColor = true;
 			this.BtnResetInstallDir.Click += new System.EventHandler(this.BtnResetInstallDir_Click);
 			// 
-			// ////////////
+			// BtnUninstall
 			// 
 			this.BtnUninstall.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
 			this.BtnUninstall.ForeColor = System.Drawing.Color.DarkRed;
@@ -176,26 +166,11 @@ namespace HLTStudio
 			this.BtnUninstall.Text = "アンインストール";
 			this.BtnUninstall.Click += new System.EventHandler(this.BtnUninstall_Click);
 			// 
-			// ////////
-			// 
-			this.FormMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.FormMenu_ビルド番号をクリップボードにコピーする});
-			this.FormMenu.Name = "FormMenu";
-			this.FormMenu.Size = new System.Drawing.Size(260, 48);
-			// 
-			// ////////////////////////////
-			// 
-			this.FormMenu_ビルド番号をクリップボードにコピーする.Name = "FormMenu_ビルド番号をクリップボードにコピーする";
-			this.FormMenu_ビルド番号をクリップボードにコピーする.Size = new System.Drawing.Size(259, 22);
-			this.FormMenu_ビルド番号をクリップボードにコピーする.Text = "ビルド番号をクリップボードにコピーする(&B)";
-			this.FormMenu_ビルド番号をクリップボードにコピーする.Click += new System.EventHandler(this.FormMenu_ビルド番号をクリップボードにコピーする_Click);
-			// 
-			// ///////
+			// MainWin
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(764, 491);
-			this.ContextMenuStrip = this.FormMenu;
 			this.Controls.Add(this.BtnUninstall);
 			this.Controls.Add(this.BtnInstall);
 			this.Controls.Add(this.MainPanel);
@@ -215,7 +190,6 @@ namespace HLTStudio
 			this.MainPanel.PerformLayout();
 			this.G001.ResumeLayout(false);
 			this.G001.PerformLayout();
-			this.FormMenu.ResumeLayout(false);
 			this.ResumeLayout(false);
 
 		}
@@ -233,11 +207,6 @@ namespace HLTStudio
 		private System.Windows.Forms.ContextMenuStrip TxtInstallDirMenu;
 		private System.Windows.Forms.ToolStripMenuItem TxtInstallDirMenu_コピー;
 		private System.Windows.Forms.Button BtnUninstall;
-		private System.Windows.Forms.ContextMenuStrip FormMenu;
-		private System.Windows.Forms.ToolStripMenuItem FormMenu_ビルド番号をクリップボードにコピーする;
 	}
 }
 
-//
-// <<< Processed by SolutionConv
-//

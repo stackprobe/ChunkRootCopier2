@@ -1,23 +1,16 @@
-﻿// Processed by SolutionConv >>>
-//
-// 本ソースファイルは、公開時の所定の手続きとして一部のセンシティブな情報をマスキングしています。
-// 元データの機微に触れる可能性がある箇所を伏せ字化したものであり、
-// リリース版との処理内容に実質的な差異が生じない範囲で調整を加えています。
-//
-
-namespace HLTStudio.Dialogs
+﻿namespace HLTStudio.Dialogs
 {
 	partial class SelectDirectoryDlg
 	{
-		/// /////////
-		/// //////// //////// /////////
-		/// //////////
+		/// <summary>
+		/// Required designer variable.
+		/// </summary>
 		private System.ComponentModel.IContainer components = null;
 
-		/// /////////
-		/// ///// // /// ///////// ///// /////
-		/// //////////
-		/// ////// ///////////////////// // /////// ///////// ////// // ///////// ////////// //////////////
+		/// <summary>
+		/// Clean up any resources being used.
+		/// </summary>
+		/// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
 		protected override void Dispose(bool disposing)
 		{
 			if (disposing && (components != null))
@@ -27,12 +20,12 @@ namespace HLTStudio.Dialogs
 			base.Dispose(disposing);
 		}
 
-		#region /////// //// //////// ///////// ////
+		#region Windows Form Designer generated code
 
-		/// /////////
-		/// //////// ////// /// //////// /////// / // /// //////
-		/// /// //////// // //// ////// //// /// //// ///////
-		/// //////////
+		/// <summary>
+		/// Required method for Designer support - do not modify
+		/// the contents of this method with the code editor.
+		/// </summary>
 		private void InitializeComponent()
 		{
 			this.components = new System.ComponentModel.Container();
@@ -52,7 +45,7 @@ namespace HLTStudio.Dialogs
 			this.TxtPathMenu.SuspendLayout();
 			this.SuspendLayout();
 			// 
-			// /////
+			// BtnOK
 			// 
 			this.BtnOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
 			this.BtnOK.Location = new System.Drawing.Point(526, 189);
@@ -63,7 +56,7 @@ namespace HLTStudio.Dialogs
 			this.BtnOK.UseVisualStyleBackColor = true;
 			this.BtnOK.Click += new System.EventHandler(this.BtnOK_Click);
 			// 
-			// ////////
+			// Btnキャンセル
 			// 
 			this.Btnキャンセル.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
 			this.Btnキャンセル.Location = new System.Drawing.Point(652, 189);
@@ -74,7 +67,7 @@ namespace HLTStudio.Dialogs
 			this.Btnキャンセル.UseVisualStyleBackColor = true;
 			this.Btnキャンセル.Click += new System.EventHandler(this.Btnキャンセル_Click);
 			// 
-			// ///////
+			// TxtPath
 			// 
 			this.TxtPath.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
@@ -85,7 +78,7 @@ namespace HLTStudio.Dialogs
 			this.TxtPath.Size = new System.Drawing.Size(760, 27);
 			this.TxtPath.TabIndex = 1;
 			// 
-			// ///////////
+			// TxtPathMenu
 			// 
 			this.TxtPathMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.TxtPathMenu_コピー,
@@ -95,33 +88,33 @@ namespace HLTStudio.Dialogs
 			this.TxtPathMenu.Name = "TxtPathMenu";
 			this.TxtPathMenu.Size = new System.Drawing.Size(131, 76);
 			// 
-			// ///////////////
+			// TxtPathMenu_コピー
 			// 
 			this.TxtPathMenu_コピー.Name = "TxtPathMenu_コピー";
 			this.TxtPathMenu_コピー.Size = new System.Drawing.Size(130, 22);
 			this.TxtPathMenu_コピー.Text = "コピー(&C)";
 			this.TxtPathMenu_コピー.Click += new System.EventHandler(this.TxtPathMenu_コピー_Click);
 			// 
-			// ////////////////
+			// TxtPathMenu_貼り付け
 			// 
 			this.TxtPathMenu_貼り付け.Name = "TxtPathMenu_貼り付け";
 			this.TxtPathMenu_貼り付け.Size = new System.Drawing.Size(130, 22);
 			this.TxtPathMenu_貼り付け.Text = "貼り付け(&P)";
 			this.TxtPathMenu_貼り付け.Click += new System.EventHandler(this.TxtPathMenu_貼り付け_Click);
 			// 
-			// ////
+			// S002
 			// 
 			this.S002.Name = "S002";
 			this.S002.Size = new System.Drawing.Size(127, 6);
 			// 
-			// ///////////////
+			// TxtPathMenu_クリア
 			// 
 			this.TxtPathMenu_クリア.Name = "TxtPathMenu_クリア";
 			this.TxtPathMenu_クリア.Size = new System.Drawing.Size(130, 22);
 			this.TxtPathMenu_クリア.Text = "クリア(&L)";
 			this.TxtPathMenu_クリア.Click += new System.EventHandler(this.TxtPathMenu_クリア_Click);
 			// 
-			// /////
+			// Btn参照
 			// 
 			this.Btn参照.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
 			this.Btn参照.Location = new System.Drawing.Point(692, 106);
@@ -132,7 +125,7 @@ namespace HLTStudio.Dialogs
 			this.Btn参照.UseVisualStyleBackColor = true;
 			this.Btn参照.Click += new System.EventHandler(this.Btn参照_Click);
 			// 
-			// ////
+			// L001
 			// 
 			this.L001.AutoSize = true;
 			this.L001.Location = new System.Drawing.Point(12, 50);
@@ -141,7 +134,7 @@ namespace HLTStudio.Dialogs
 			this.L001.TabIndex = 0;
 			this.L001.Text = "選択されたパス：";
 			// 
-			// ////
+			// L002
 			// 
 			this.L002.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
 			this.L002.AutoSize = true;
@@ -152,7 +145,7 @@ namespace HLTStudio.Dialogs
 			this.L002.TabIndex = 4;
 			this.L002.Text = "上部のテキストボックスに直接入力するか、\r\n右側の［参照...］ボタンで選択するか、\r\nこの領域にドラッグ＆ドロップして指定してください。";
 			// 
-			// ///////
+			// Btn元に戻す
 			// 
 			this.Btn元に戻す.Location = new System.Drawing.Point(12, 106);
 			this.Btn元に戻す.Name = "Btn元に戻す";
@@ -162,7 +155,7 @@ namespace HLTStudio.Dialogs
 			this.Btn元に戻す.UseVisualStyleBackColor = true;
 			this.Btn元に戻す.Click += new System.EventHandler(this.Btn元に戻す_Click);
 			// 
-			// //////////////////
+			// SelectDirectoryDlg
 			// 
 			this.AllowDrop = true;
 			this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
@@ -210,7 +203,3 @@ namespace HLTStudio.Dialogs
 		private System.Windows.Forms.Button Btn元に戻す;
 	}
 }
-
-//
-// <<< Processed by SolutionConv
-//

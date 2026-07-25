@@ -1,23 +1,16 @@
-﻿// Processed by SolutionConv >>>
-//
-// 本ソースファイルは、公開時の所定の手続きとして一部のセンシティブな情報をマスキングしています。
-// 元データの機微に触れる可能性がある箇所を伏せ字化したものであり、
-// リリース版との処理内容に実質的な差異が生じない範囲で調整を加えています。
-//
-
-namespace HLTStudio.Dialogs
+﻿namespace HLTStudio.Dialogs
 {
 	partial class MessageDlg
 	{
-		/// /////////
-		/// //////// //////// /////////
-		/// //////////
+		/// <summary>
+		/// Required designer variable.
+		/// </summary>
 		private System.ComponentModel.IContainer components = null;
 
-		/// /////////
-		/// ///// // /// ///////// ///// /////
-		/// //////////
-		/// ////// ///////////////////// // /////// ///////// ////// // ///////// ////////// //////////////
+		/// <summary>
+		/// Clean up any resources being used.
+		/// </summary>
+		/// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
 		protected override void Dispose(bool disposing)
 		{
 			if (disposing && (components != null))
@@ -27,12 +20,12 @@ namespace HLTStudio.Dialogs
 			base.Dispose(disposing);
 		}
 
-		#region /////// //// //////// ///////// ////
+		#region Windows Form Designer generated code
 
-		/// /////////
-		/// //////// ////// /// //////// /////// / // /// //////
-		/// /// //////// // //// ////// //// /// //// ///////
-		/// //////////
+		/// <summary>
+		/// Required method for Designer support - do not modify
+		/// the contents of this method with the code editor.
+		/// </summary>
 		private void InitializeComponent()
 		{
 			this.components = new System.ComponentModel.Container();
@@ -58,7 +51,7 @@ namespace HLTStudio.Dialogs
 			((System.ComponentModel.ISupportInitialize)(this.ErrorIcon)).BeginInit();
 			this.SuspendLayout();
 			// 
-			// /////////
+			// MainPanel
 			// 
 			this.MainPanel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
@@ -76,7 +69,7 @@ namespace HLTStudio.Dialogs
 			this.MainPanel.TabIndex = 0;
 			this.MainPanel.Paint += new System.Windows.Forms.PaintEventHandler(this.MainPanel_Paint);
 			// 
-			// ///////////
+			// WarningIcon
 			// 
 			this.WarningIcon.Image = ((System.Drawing.Image)(resources.GetObject("WarningIcon.Image")));
 			this.WarningIcon.Location = new System.Drawing.Point(162, 20);
@@ -86,7 +79,7 @@ namespace HLTStudio.Dialogs
 			this.WarningIcon.TabStop = false;
 			this.WarningIcon.Visible = false;
 			// 
-			// ////////////
+			// QuestionIcon
 			// 
 			this.QuestionIcon.Image = ((System.Drawing.Image)(resources.GetObject("QuestionIcon.Image")));
 			this.QuestionIcon.Location = new System.Drawing.Point(254, 20);
@@ -96,7 +89,7 @@ namespace HLTStudio.Dialogs
 			this.QuestionIcon.TabStop = false;
 			this.QuestionIcon.Visible = false;
 			// 
-			// ///////////////
+			// InformationIcon
 			// 
 			this.InformationIcon.Image = ((System.Drawing.Image)(resources.GetObject("InformationIcon.Image")));
 			this.InformationIcon.Location = new System.Drawing.Point(208, 20);
@@ -106,7 +99,7 @@ namespace HLTStudio.Dialogs
 			this.InformationIcon.TabStop = false;
 			this.InformationIcon.Visible = false;
 			// 
-			// ////////////////
+			// TxtDetailMessage
 			// 
 			this.TxtDetailMessage.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
@@ -123,21 +116,21 @@ namespace HLTStudio.Dialogs
 			this.TxtDetailMessage.Visible = false;
 			this.TxtDetailMessage.WordWrap = false;
 			// 
-			// ////////////////////
+			// TxtDetailMessageMenu
 			// 
 			this.TxtDetailMessageMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.TxtDetailMessageMenu_コピー});
 			this.TxtDetailMessageMenu.Name = "TxtDetailMessageMenu";
 			this.TxtDetailMessageMenu.Size = new System.Drawing.Size(115, 26);
 			// 
-			// ////////////////////////
+			// TxtDetailMessageMenu_コピー
 			// 
 			this.TxtDetailMessageMenu_コピー.Name = "TxtDetailMessageMenu_コピー";
 			this.TxtDetailMessageMenu_コピー.Size = new System.Drawing.Size(114, 22);
 			this.TxtDetailMessageMenu_コピー.Text = "コピー(&C)";
 			this.TxtDetailMessageMenu_コピー.Click += new System.EventHandler(this.TxtDetailMessageMenu_コピー_Click);
 			// 
-			// ////////////
+			// LMainMessage
 			// 
 			this.LMainMessage.AutoSize = true;
 			this.LMainMessage.Location = new System.Drawing.Point(170, 80);
@@ -146,7 +139,7 @@ namespace HLTStudio.Dialogs
 			this.LMainMessage.TabIndex = 0;
 			this.LMainMessage.Text = "アプリケーションの処理中にエラーが発生しました。";
 			// 
-			// /////////
+			// ErrorIcon
 			// 
 			this.ErrorIcon.Image = ((System.Drawing.Image)(resources.GetObject("ErrorIcon.Image")));
 			this.ErrorIcon.Location = new System.Drawing.Point(20, 20);
@@ -155,7 +148,7 @@ namespace HLTStudio.Dialogs
 			this.ErrorIcon.TabIndex = 0;
 			this.ErrorIcon.TabStop = false;
 			// 
-			// //////////
+			// BtnOption1
 			// 
 			this.BtnOption1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
 			this.BtnOption1.Location = new System.Drawing.Point(200, 392);
@@ -166,7 +159,7 @@ namespace HLTStudio.Dialogs
 			this.BtnOption1.UseVisualStyleBackColor = true;
 			this.BtnOption1.Click += new System.EventHandler(this.BtnOption1_Click);
 			// 
-			// ////////////
+			// LShowDetails
 			// 
 			this.LShowDetails.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
 			this.LShowDetails.AutoSize = true;
@@ -180,7 +173,7 @@ namespace HLTStudio.Dialogs
 			this.LShowDetails.Text = "詳細を表示する";
 			this.LShowDetails.Click += new System.EventHandler(this.LShowDetails_Click);
 			// 
-			// //////////
+			// BtnOption2
 			// 
 			this.BtnOption2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
 			this.BtnOption2.Location = new System.Drawing.Point(326, 392);
@@ -191,7 +184,7 @@ namespace HLTStudio.Dialogs
 			this.BtnOption2.UseVisualStyleBackColor = true;
 			this.BtnOption2.Click += new System.EventHandler(this.BtnOption2_Click);
 			// 
-			// //////////
+			// BtnOption3
 			// 
 			this.BtnOption3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
 			this.BtnOption3.Location = new System.Drawing.Point(452, 392);
@@ -202,7 +195,7 @@ namespace HLTStudio.Dialogs
 			this.BtnOption3.UseVisualStyleBackColor = true;
 			this.BtnOption3.Click += new System.EventHandler(this.BtnOption3_Click);
 			// 
-			// //////////
+			// MessageDlg
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -253,7 +246,3 @@ namespace HLTStudio.Dialogs
 		private System.Windows.Forms.ToolStripMenuItem TxtDetailMessageMenu_コピー;
 	}
 }
-
-//
-// <<< Processed by SolutionConv
-//

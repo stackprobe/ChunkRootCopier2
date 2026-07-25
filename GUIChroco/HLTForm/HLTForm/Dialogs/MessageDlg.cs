@@ -1,11 +1,4 @@
-﻿// Processed by SolutionConv >>>
-//
-// 本ソースファイルは、公開時の所定の手続きとして一部のセンシティブな情報をマスキングしています。
-// 元データの機微に触れる可能性がある箇所を伏せ字化したものであり、
-// リリース版との処理内容に実質的な差異が生じない範囲で調整を加えています。
-//
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -27,15 +20,15 @@ namespace HLTStudio.Dialogs
 			Question,
 		}
 
-		/// /////////
-		/// ////////////////
-		/// //////////
-		/// ////// /////////////////////////////////////
-		/// ////// /////////////////////////
-		/// ////// //////////////////////////////////
-		/// ////// ///////////////////////////////////////////////
-		/// ////// ////////////////////////////////
-		/// ///////////////////////////////////////////////////////////
+		/// <summary>
+		/// メッセージダイアログを表示する。
+		/// </summary>
+		/// <param name="kind">メッセージの種類(アイコンの種類)</param>
+		/// <param name="title">タイトル</param>
+		/// <param name="message">主メッセージ(改行可)</param>
+		/// <param name="detailMessage">詳細メッセージ(改行可・null可)</param>
+		/// <param name="options">選択肢(1～3個)</param>
+		/// <returns>選択された番号(1～3・右上の[X]ボタンを押したときは最後の選択肢が選ばれる)</returns>
 		public static int Run(Kind_e kind, string title, string message, object detailMessage, string[] options)
 		{
 			if (
@@ -115,7 +108,7 @@ namespace HLTStudio.Dialogs
 			switch (this.Kind)
 			{
 				case Kind_e.Error:
-					// ////
+					// noop
 					break;
 
 				case Kind_e.Warning:
@@ -140,7 +133,7 @@ namespace HLTStudio.Dialogs
 					break;
 
 				default:
-					throw null; // /////
+					throw null; // never
 			}
 
 			this.Text = this.TitleText;
@@ -152,7 +145,7 @@ namespace HLTStudio.Dialogs
 
 			this.LMainMessage.Top = this.ErrorIcon.Top + (this.ErrorIcon.Height - this.LMainMessage.Height) / 2;
 
-			// //////////
+			// ウィンドウの横幅調整
 			{
 				const int MARGIN_R = 30;
 
@@ -198,7 +191,7 @@ namespace HLTStudio.Dialogs
 					break;
 
 				default:
-					throw null; // /////
+					throw null; // never
 			}
 
 			this.MinimumSize = this.Size;
@@ -229,7 +222,7 @@ namespace HLTStudio.Dialogs
 
 		private static int GetButtonTextPxWidth(Button button)
 		{
-			// ////////////////
+			// テキスト描画に必要なサイズを取得
 			Size textSize = TextRenderer.MeasureText(
 				button.Text,
 				button.Font,
@@ -237,11 +230,11 @@ namespace HLTStudio.Dialogs
 				TextFormatFlags.SingleLine | TextFormatFlags.NoPadding
 				);
 
-			// ///////////////////
-			///// ///// / ////////////// / /// // ///////////////
-			///// ////// / /////////////// / // // //////////
+			// ボタンの余白（パディングや枠線）を加味
+			//int width = textSize.Width + 12; // 左右のマージン分を適当に加える
+			//int height = textSize.Height + 8; // 上下の余白分を加える
 
-			//////// /// /////////// ////////
+			//return new Size(width, height);
 			return textSize.Width;
 		}
 
@@ -254,16 +247,16 @@ namespace HLTStudio.Dialogs
 
 		private void MainPanel_Paint(object sender, PaintEventArgs e)
 		{
-			// ////
+			// none
 		}
 
 		private void LShowDetails_Click(object sender, EventArgs e)
 		{
-			if (this.TxtDetailMessage.Visible) // / /// // ///
+			if (this.TxtDetailMessage.Visible) // ? 表示中 -> 隠す。
 			{
 				this.SetShowDetailMessage(false);
 			}
-			else // / /// // /////
+			else // ? 非表示 -> 表示する。
 			{
 				this.SetShowDetailMessage(true);
 			}
@@ -273,7 +266,7 @@ namespace HLTStudio.Dialogs
 
 		private void SetShowDetailMessage(bool showMode)
 		{
-			if (showMode) // / /////
+			if (showMode) // ? 表示する。
 			{
 				this.LShowDetails.Text = "詳細を隠す";
 				this.TxtDetailMessage.Visible = true;
@@ -282,7 +275,7 @@ namespace HLTStudio.Dialogs
 					this.MinimumSize.Height + DETAIL_MESSAGE_H_ADD
 					);
 			}
-			else // / ///
+			else // ? 隠す。
 			{
 				this.LShowDetails.Text = "詳細を表示する";
 				this.TxtDetailMessage.Visible = false;
@@ -328,7 +321,3 @@ namespace HLTStudio.Dialogs
 		}
 	}
 }
-
-//
-// <<< Processed by SolutionConv
-//

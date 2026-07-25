@@ -1,11 +1,4 @@
-﻿// Processed by SolutionConv >>>
-//
-// 本ソースファイルは、公開時の所定の手続きとして一部のセンシティブな情報をマスキングしています。
-// 元データの機微に触れる可能性がある箇所を伏せ字化したものであり、
-// リリース版との処理内容に実質的な差異が生じない範囲で調整を加えています。
-//
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -17,58 +10,54 @@ using IWshRuntimeLibrary;
 
 namespace HLTStudio.Modules
 {
-	// ///// ///// // /// // /////// ////// //// ////// /////
+	// memo: 参照の追加 -> COM -> Windows Script Host Object Model
 
 	public static class ShortcutCreator
 	{
 		public static string GetShortcutPath()
 		{
-			// ///////////
+			// デスクトップパスを取得
 			string desktopPath = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory);
 
-			// //////////////
+			// ショートカットファイルのパス
 			string shortcutPath = Path.Combine(desktopPath, Consts.APPLICATION_NAME + ".lnk");
-			////////////// / //////////////////////////////////////
+			//shortcutPath = SCommon.ToCreatablePath(shortcutPath);
 
 			return shortcutPath;
 		}
 
 		public static void Run(string mainProgram)
 		{
-			// //////////////
+			// ショートカットファイルのパス
 			string shortcutPath = GetShortcutPath();
 
-			// ////
+			// 既存削除
 			SCommon.DeletePath(shortcutPath);
 
-			// ///////////// ///
+			// WScript.Shell を生成
 			var shell = new WshShell();
 
-			// //////////
+			// ショートカットを作成
 			IWshShortcut shortcut = (IWshShortcut)shell.CreateShortcut(shortcutPath);
 
-			// /////////////////////////
+			// 実行するターゲット（例：アプリ本体の実行ファイル）
 			shortcut.TargetPath = mainProgram;
 
-			// ///////////
+			// 作業フォルダ（省略可）
 			shortcut.WorkingDirectory = SCommon.ToParentPath(mainProgram);
 
-			// /////////
+			// アイコン（省略可）
 			shortcut.IconLocation = mainProgram + ",0";
 
-			// /////////
+			// コメント（省略可）
 			shortcut.Description = Consts.APPLICATION_NAME;
 
-			// //
+			// 保存
 			shortcut.Save();
 
-			// ///
+			// 後始末
 			Marshal.FinalReleaseComObject(shortcut);
 			Marshal.FinalReleaseComObject(shell);
 		}
 	}
 }
-
-//
-// <<< Processed by SolutionConv
-//

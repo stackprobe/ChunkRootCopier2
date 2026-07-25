@@ -1,23 +1,16 @@
-﻿// Processed by SolutionConv >>>
-//
-// 本ソースファイルは、公開時の所定の手続きとして一部のセンシティブな情報をマスキングしています。
-// 元データの機微に触れる可能性がある箇所を伏せ字化したものであり、
-// リリース版との処理内容に実質的な差異が生じない範囲で調整を加えています。
-//
-
-namespace HLTStudio.Dialogs
+﻿namespace HLTStudio.Dialogs
 {
 	partial class ProcessingDlg
 	{
-		/// /////////
-		/// //////// //////// /////////
-		/// //////////
+		/// <summary>
+		/// Required designer variable.
+		/// </summary>
 		private System.ComponentModel.IContainer components = null;
 
-		/// /////////
-		/// ///// // /// ///////// ///// /////
-		/// //////////
-		/// ////// ///////////////////// // /////// ///////// ////// // ///////// ////////// //////////////
+		/// <summary>
+		/// Clean up any resources being used.
+		/// </summary>
+		/// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
 		protected override void Dispose(bool disposing)
 		{
 			if (disposing && (components != null))
@@ -27,12 +20,12 @@ namespace HLTStudio.Dialogs
 			base.Dispose(disposing);
 		}
 
-		#region /////// //// //////// ///////// ////
+		#region Windows Form Designer generated code
 
-		/// /////////
-		/// //////// ////// /// //////// /////// / // /// //////
-		/// /// //////// // //// ////// //// /// //// ///////
-		/// //////////
+		/// <summary>
+		/// Required method for Designer support - do not modify
+		/// the contents of this method with the code editor.
+		/// </summary>
 		private void InitializeComponent()
 		{
 			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ProcessingDlg));
@@ -40,7 +33,7 @@ namespace HLTStudio.Dialogs
 			this.LMainMessage = new System.Windows.Forms.Label();
 			this.SuspendLayout();
 			// 
-			// /////
+			// PB001
 			// 
 			this.PB001.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
@@ -50,7 +43,7 @@ namespace HLTStudio.Dialogs
 			this.PB001.Style = System.Windows.Forms.ProgressBarStyle.Marquee;
 			this.PB001.TabIndex = 0;
 			// 
-			// ////////////
+			// LMainMessage
 			// 
 			this.LMainMessage.AutoSize = true;
 			this.LMainMessage.Location = new System.Drawing.Point(40, 60);
@@ -59,7 +52,7 @@ namespace HLTStudio.Dialogs
 			this.LMainMessage.TabIndex = 1;
 			this.LMainMessage.Text = "(メインメッセージ)";
 			// 
-			// /////////////
+			// ProcessingDlg
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -88,7 +81,3 @@ namespace HLTStudio.Dialogs
 		private System.Windows.Forms.Label LMainMessage;
 	}
 }
-
-//
-// <<< Processed by SolutionConv
-//

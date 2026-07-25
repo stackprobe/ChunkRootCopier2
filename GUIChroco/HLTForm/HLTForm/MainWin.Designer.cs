@@ -1,23 +1,16 @@
-﻿// Processed by SolutionConv >>>
-//
-// 本ソースファイルは、公開時の所定の手続きとして一部のセンシティブな情報をマスキングしています。
-// 元データの機微に触れる可能性がある箇所を伏せ字化したものであり、
-// リリース版との処理内容に実質的な差異が生じない範囲で調整を加えています。
-//
-
-namespace HLTStudio
+﻿namespace HLTStudio
 {
 	partial class MainWin
 	{
-		/// /////////
-		/// /////////////
-		/// //////////
+		/// <summary>
+		/// 必要なデザイナー変数です。
+		/// </summary>
 		private System.ComponentModel.IContainer components = null;
 
-		/// /////////
-		/// ///////////////////////
-		/// //////////
-		/// ////// ///////////////////// //////////// ////////////// ///// ///////////
+		/// <summary>
+		/// 使用中のリソースをすべてクリーンアップします。
+		/// </summary>
+		/// <param name="disposing">マネージ リソースが破棄される場合 true、破棄されない場合は false です。</param>
 		protected override void Dispose(bool disposing)
 		{
 			if (disposing && (components != null))
@@ -27,12 +20,12 @@ namespace HLTStudio
 			base.Dispose(disposing);
 		}
 
-		#region /////// //// //////////////
+		#region Windows フォーム デザイナーで生成されたコード
 
-		/// /////////
-		/// ///// /////////////////////////
-		/// /// /////////////////
-		/// //////////
+		/// <summary>
+		/// デザイナー サポートに必要なメソッドです。このメソッドの内容を
+		/// コード エディターで変更しないでください。
+		/// </summary>
 		private void InitializeComponent()
 		{
 			this.components = new System.ComponentModel.Container();
@@ -84,7 +77,7 @@ namespace HLTStudio
 			this.panel1.SuspendLayout();
 			this.SuspendLayout();
 			// 
-			// ///////
+			// MenuBar
 			// 
 			this.MenuBar.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.MenuBar_アプリケーション,
@@ -95,7 +88,7 @@ namespace HLTStudio
 			this.MenuBar.TabIndex = 0;
 			this.MenuBar.Text = "MenuBar";
 			// 
-			// ////////////////
+			// MenuBar_アプリケーション
 			// 
 			this.MenuBar_アプリケーション.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.MenuBar_アプリケーション_終了});
@@ -103,14 +96,14 @@ namespace HLTStudio
 			this.MenuBar_アプリケーション.Size = new System.Drawing.Size(104, 20);
 			this.MenuBar_アプリケーション.Text = "アプリケーション(&A)";
 			// 
-			// ///////////////////
+			// MenuBar_アプリケーション_終了
 			// 
 			this.MenuBar_アプリケーション_終了.Name = "MenuBar_アプリケーション_終了";
 			this.MenuBar_アプリケーション_終了.Size = new System.Drawing.Size(113, 22);
 			this.MenuBar_アプリケーション_終了.Text = "終了(&X)";
 			this.MenuBar_アプリケーション_終了.Click += new System.EventHandler(this.MenuBar_アプリケーション_終了_Click);
 			// 
-			// ///////////
+			// MenuBar_ツール
 			// 
 			this.MenuBar_ツール.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.MenuBar_ツール_設定});
@@ -118,14 +111,14 @@ namespace HLTStudio
 			this.MenuBar_ツール.Size = new System.Drawing.Size(60, 20);
 			this.MenuBar_ツール.Text = "ツール(&T)";
 			// 
-			// //////////////
+			// MenuBar_ツール_設定
 			// 
 			this.MenuBar_ツール_設定.Name = "MenuBar_ツール_設定";
 			this.MenuBar_ツール_設定.Size = new System.Drawing.Size(112, 22);
 			this.MenuBar_ツール_設定.Text = "設定(&S)";
 			this.MenuBar_ツール_設定.Click += new System.EventHandler(this.MenuBar_ツール_設定_Click);
 			// 
-			// /////////
+			// StatusBar
 			// 
 			this.StatusBar.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.MainStatus,
@@ -136,7 +129,7 @@ namespace HLTStudio
 			this.StatusBar.TabIndex = 5;
 			this.StatusBar.Text = "statusStrip1";
 			// 
-			// //////////
+			// MainStatus
 			// 
 			this.MainStatus.Name = "MainStatus";
 			this.MainStatus.Size = new System.Drawing.Size(710, 17);
@@ -144,13 +137,13 @@ namespace HLTStudio
 			this.MainStatus.Text = "MainStatus";
 			this.MainStatus.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			// 
-			// /////////
+			// SubStatus
 			// 
 			this.SubStatus.Name = "SubStatus";
 			this.SubStatus.Size = new System.Drawing.Size(59, 17);
 			this.SubStatus.Text = "SubStatus";
 			// 
-			// ///////
+			// Grpコピー元
 			// 
 			this.Grpコピー元.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
@@ -167,7 +160,7 @@ namespace HLTStudio
 			this.Grpコピー元.TabStop = false;
 			this.Grpコピー元.Text = "コピー元";
 			// 
-			// ////
+			// L004
 			// 
 			this.L004.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
 			this.L004.AutoSize = true;
@@ -179,7 +172,7 @@ namespace HLTStudio
 			this.L004.TabIndex = 0;
 			this.L004.Text = "※コンテキストファイルをドラッグ＆ドロップしても読み込まれます。";
 			// 
-			// //////////
+			// Grp対象パスリスト
 			// 
 			this.Grp対象パスリスト.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
@@ -197,7 +190,7 @@ namespace HLTStudio
 			this.Grp対象パスリスト.TabStop = false;
 			this.Grp対象パスリスト.Text = "対象パスリスト";
 			// 
-			// /////////////////
+			// TargetRelPathList
 			// 
 			this.TargetRelPathList.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
@@ -215,21 +208,21 @@ namespace HLTStudio
 			this.TargetRelPathList.Size = new System.Drawing.Size(484, 64);
 			this.TargetRelPathList.TabIndex = 1;
 			// 
-			// /////////////////////
+			// TargetRelPathListMenu
 			// 
 			this.TargetRelPathListMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.TargetRelPathListMenu_コピー});
 			this.TargetRelPathListMenu.Name = "TargetRelPathListMenu";
 			this.TargetRelPathListMenu.Size = new System.Drawing.Size(115, 26);
 			// 
-			// /////////////////////////
+			// TargetRelPathListMenu_コピー
 			// 
 			this.TargetRelPathListMenu_コピー.Name = "TargetRelPathListMenu_コピー";
 			this.TargetRelPathListMenu_コピー.Size = new System.Drawing.Size(114, 22);
 			this.TargetRelPathListMenu_コピー.Text = "コピー(&C)";
 			this.TargetRelPathListMenu_コピー.Click += new System.EventHandler(this.TargetRelPathListMenu_コピー_Click);
 			// 
-			// ///////////////////////
+			// TargetRelPathListStatus
 			// 
 			this.TargetRelPathListStatus.AutoSize = true;
 			this.TargetRelPathListStatus.Location = new System.Drawing.Point(6, 32);
@@ -239,7 +232,7 @@ namespace HLTStudio
 			this.TargetRelPathListStatus.Text = "対象ファイル数：999999　( 欠損ファイル数：999999 )";
 			this.TargetRelPathListStatus.Click += new System.EventHandler(this.TargetRelPathListStatus_Click);
 			// 
-			// //////////////////////
+			// Chk大文字小文字は対象パスリストに合わせる
 			// 
 			this.Chk大文字小文字は対象パスリストに合わせる.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
 			this.Chk大文字小文字は対象パスリストに合わせる.AutoSize = true;
@@ -250,7 +243,7 @@ namespace HLTStudio
 			this.Chk大文字小文字は対象パスリストに合わせる.Text = "大文字小文字は対象パスリストに合わせる";
 			this.Chk大文字小文字は対象パスリストに合わせる.UseVisualStyleBackColor = true;
 			// 
-			// //////////////////
+			// Chkコピー前にコピー先をクリアする
 			// 
 			this.Chkコピー前にコピー先をクリアする.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
 			this.Chkコピー前にコピー先をクリアする.AutoSize = true;
@@ -261,7 +254,7 @@ namespace HLTStudio
 			this.Chkコピー前にコピー先をクリアする.Text = "コピー前にコピー先をクリアする";
 			this.Chkコピー前にコピー先をクリアする.UseVisualStyleBackColor = true;
 			// 
-			// ///////////
+			// BtnEditList
 			// 
 			this.BtnEditList.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
 			this.BtnEditList.Location = new System.Drawing.Point(496, 79);
@@ -272,7 +265,7 @@ namespace HLTStudio
 			this.BtnEditList.UseVisualStyleBackColor = true;
 			this.BtnEditList.Click += new System.EventHandler(this.BtnEditList_Click);
 			// 
-			// ///////////
+			// BtnEditTree
 			// 
 			this.BtnEditTree.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
 			this.BtnEditTree.Location = new System.Drawing.Point(496, 33);
@@ -283,7 +276,7 @@ namespace HLTStudio
 			this.BtnEditTree.UseVisualStyleBackColor = true;
 			this.BtnEditTree.Click += new System.EventHandler(this.BtnEditTree_Click);
 			// 
-			// ///////////////
+			// BtnInputRootDir
 			// 
 			this.BtnInputRootDir.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
 			this.BtnInputRootDir.Location = new System.Drawing.Point(502, 96);
@@ -294,7 +287,7 @@ namespace HLTStudio
 			this.BtnInputRootDir.UseVisualStyleBackColor = true;
 			this.BtnInputRootDir.Click += new System.EventHandler(this.BtnInputRootDir_Click);
 			// 
-			// ///////////////
+			// TxtInputRootDir
 			// 
 			this.TxtInputRootDir.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
@@ -305,21 +298,21 @@ namespace HLTStudio
 			this.TxtInputRootDir.Size = new System.Drawing.Size(538, 27);
 			this.TxtInputRootDir.TabIndex = 2;
 			// 
-			// ///////////////////
+			// TxtInputRootDirMenu
 			// 
 			this.TxtInputRootDirMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.TxtInputRootDirMenu_コピー});
 			this.TxtInputRootDirMenu.Name = "TxtInputRootDirMenu";
 			this.TxtInputRootDirMenu.Size = new System.Drawing.Size(115, 26);
 			// 
-			// ///////////////////////
+			// TxtInputRootDirMenu_コピー
 			// 
 			this.TxtInputRootDirMenu_コピー.Name = "TxtInputRootDirMenu_コピー";
 			this.TxtInputRootDirMenu_コピー.Size = new System.Drawing.Size(114, 22);
 			this.TxtInputRootDirMenu_コピー.Text = "コピー(&C)";
 			this.TxtInputRootDirMenu_コピー.Click += new System.EventHandler(this.TxtInputRootDirMenu_コピー_Click);
 			// 
-			// ////
+			// L002
 			// 
 			this.L002.AutoSize = true;
 			this.L002.Location = new System.Drawing.Point(40, 40);
@@ -328,7 +321,7 @@ namespace HLTStudio
 			this.L002.TabIndex = 1;
 			this.L002.Text = "コピー元パス：";
 			// 
-			// ////
+			// L001
 			// 
 			this.L001.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
@@ -341,7 +334,7 @@ namespace HLTStudio
 			this.L001.Text = "▼";
 			this.L001.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
 			// 
-			// ///////
+			// Grpコピー先
 			// 
 			this.Grpコピー先.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
@@ -356,7 +349,7 @@ namespace HLTStudio
 			this.Grpコピー先.TabStop = false;
 			this.Grpコピー先.Text = "コピー先";
 			// 
-			// /////////////////////////
+			// OutputRootDirErrorMessage
 			// 
 			this.OutputRootDirErrorMessage.AutoSize = true;
 			this.OutputRootDirErrorMessage.ForeColor = System.Drawing.Color.Red;
@@ -366,7 +359,7 @@ namespace HLTStudio
 			this.OutputRootDirErrorMessage.TabIndex = 3;
 			this.OutputRootDirErrorMessage.Text = "OutputRootDirErrorMessage";
 			// 
-			// ////////////////
+			// BtnOutputRootDir
 			// 
 			this.BtnOutputRootDir.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
 			this.BtnOutputRootDir.Location = new System.Drawing.Point(502, 96);
@@ -377,7 +370,7 @@ namespace HLTStudio
 			this.BtnOutputRootDir.UseVisualStyleBackColor = true;
 			this.BtnOutputRootDir.Click += new System.EventHandler(this.BtnOutputRootDir_Click);
 			// 
-			// ////////////////
+			// TxtOutputRootDir
 			// 
 			this.TxtOutputRootDir.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
@@ -388,21 +381,21 @@ namespace HLTStudio
 			this.TxtOutputRootDir.Size = new System.Drawing.Size(538, 27);
 			this.TxtOutputRootDir.TabIndex = 1;
 			// 
-			// ////////////////////
+			// TxtOutputRootDirMenu
 			// 
 			this.TxtOutputRootDirMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.TxtOutputRootDirMenu_コピー});
 			this.TxtOutputRootDirMenu.Name = "contextMenuStrip1";
 			this.TxtOutputRootDirMenu.Size = new System.Drawing.Size(115, 26);
 			// 
-			// ////////////////////////
+			// TxtOutputRootDirMenu_コピー
 			// 
 			this.TxtOutputRootDirMenu_コピー.Name = "TxtOutputRootDirMenu_コピー";
 			this.TxtOutputRootDirMenu_コピー.Size = new System.Drawing.Size(114, 22);
 			this.TxtOutputRootDirMenu_コピー.Text = "コピー(&C)";
 			this.TxtOutputRootDirMenu_コピー.Click += new System.EventHandler(this.TxtOutputRootDirMenu_コピー_Click);
 			// 
-			// ////
+			// L003
 			// 
 			this.L003.AutoSize = true;
 			this.L003.Location = new System.Drawing.Point(40, 40);
@@ -411,7 +404,7 @@ namespace HLTStudio
 			this.L003.TabIndex = 0;
 			this.L003.Text = "コピー先パス：";
 			// 
-			// //////////
+			// BtnExecute
 			// 
 			this.BtnExecute.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
 			this.BtnExecute.Location = new System.Drawing.Point(3, 476);
@@ -422,7 +415,7 @@ namespace HLTStudio
 			this.BtnExecute.UseVisualStyleBackColor = true;
 			this.BtnExecute.Click += new System.EventHandler(this.BtnExecute_Click);
 			// 
-			// ////////
+			// Btnインポート
 			// 
 			this.Btnインポート.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
 			this.Btnインポート.Location = new System.Drawing.Point(3, 34);
@@ -433,7 +426,7 @@ namespace HLTStudio
 			this.Btnインポート.UseVisualStyleBackColor = true;
 			this.Btnインポート.Click += new System.EventHandler(this.Btnインポート_Click);
 			// 
-			// /////////
+			// Btnエクスポート
 			// 
 			this.Btnエクスポート.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
 			this.Btnエクスポート.Location = new System.Drawing.Point(3, 100);
@@ -444,7 +437,7 @@ namespace HLTStudio
 			this.Btnエクスポート.UseVisualStyleBackColor = true;
 			this.Btnエクスポート.Click += new System.EventHandler(this.Btnエクスポート_Click);
 			// 
-			// //////
+			// panel1
 			// 
 			this.panel1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Right)));
@@ -457,7 +450,7 @@ namespace HLTStudio
 			this.panel1.Size = new System.Drawing.Size(160, 580);
 			this.panel1.TabIndex = 4;
 			// 
-			// ///////
+			// MainWin
 			// 
 			this.AllowDrop = true;
 			this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
@@ -541,6 +534,3 @@ namespace HLTStudio
 	}
 }
 
-//
-// <<< Processed by SolutionConv
-//

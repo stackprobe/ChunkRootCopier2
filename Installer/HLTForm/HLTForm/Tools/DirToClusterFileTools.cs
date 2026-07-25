@@ -1,11 +1,4 @@
-﻿// Processed by SolutionConv >>>
-//
-// 本ソースファイルは、公開時の所定の手続きとして一部のセンシティブな情報をマスキングしています。
-// 元データの機微に触れる可能性がある箇所を伏せ字化したものであり、
-// リリース版との処理内容に実質的な差異が生じない範囲で調整を加えています。
-//
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -15,21 +8,15 @@ using HLTStudio.Commons;
 
 namespace HLTStudio.Tools
 {
-	// ////////////////////////////////////////////////////////////////////////////////
-	// ///// ///////////////////////
-	// ////////////////////////////////////////////////////////////////////////////////
-	// ////////////////////////////
-	// ////////////////////////////////
-	// /////////////////////////////////
-	// //////////////////////////////////////////////////
-	// ////////////////////////////////////////////////////////////////////////////////
+	// クラスタ書式：
+	// -- https://github.com/stackprobe/notehub/blob/main/DevSourceRef/DirToCluster_Format_Specification.txt
 
-	/// /////////
-	/// ////////////////////////////
-	/// ///////////////////
-	/// //////////////// ///////////// ////////
-	/// //////////// / ///////
-	/// //////////
+	/// <summary>
+	/// 指定ディレクトリを圧縮して単一ファイルにまとめる機能と、
+	/// 圧縮ファイルを展開する機能を提供する。
+	/// 圧縮形式(圧縮ファイルの内容)は apps/Compress と互換性がある。
+	/// 圧縮ファイルの推奨拡張子 = .cmp-gz
+	/// </summary>
 	public static class DirToClusterFileTools
 	{
 		public static void DirToClusterFile(string rDir, string wFile)
@@ -58,7 +45,7 @@ namespace HLTStudio.Tools
 
 					string relPath = SCommon.EraseRoot(dir, rDir);
 
-					WriteString("D"); // /////////
+					WriteString("D"); // Directory
 					WriteString(relPath);
 				}
 				foreach (string file in Directory.GetFiles(rDir, "*", SearchOption.AllDirectories))
@@ -67,7 +54,7 @@ namespace HLTStudio.Tools
 
 					string relPath = SCommon.EraseRoot(file, rDir);
 
-					WriteString("F"); // ////
+					WriteString("F"); // File
 					WriteString(relPath);
 
 					FileInfo fileInfo = new FileInfo(file);
@@ -82,7 +69,7 @@ namespace HLTStudio.Tools
 						SCommon.ReadToEnd(reader.Read, Writer.Write);
 					}
 				}
-				WriteString("E"); // ///
+				WriteString("E"); // End
 				Writer = null;
 			}
 			ProcMain.WriteLog("DirToClusterFile-ED");
@@ -129,7 +116,7 @@ namespace HLTStudio.Tools
 				{
 					string label = ReadString();
 
-					if (label == "D") // /////////
+					if (label == "D") // Directory
 					{
 						string relPath = ReadString();
 						CheckRelPath(relPath);
@@ -139,7 +126,7 @@ namespace HLTStudio.Tools
 
 						SCommon.CreateDir(dir);
 					}
-					else if (label == "F") // ////
+					else if (label == "F") // File
 					{
 						string relPath = ReadString();
 						CheckRelPath(relPath);
@@ -164,7 +151,9 @@ namespace HLTStudio.Tools
 						{
 							for (long count = 0L; count < fileSize;)
 							{
-								int size = (int)Math.Min(2000000, fileSize - count);
+								const int READ_SIZE_MAX = 2000000; // 2 MB
+
+								int size = (int)Math.Min((long)READ_SIZE_MAX, fileSize - count);
 								SCommon.Write(writer, SCommon.Read(Reader, size));
 								count += size;
 							}
@@ -178,7 +167,7 @@ namespace HLTStudio.Tools
 							fileInfo.LastAccessTime = lastAccessTime.ToDateTime();
 						}
 					}
-					else if (label == "E") // ///
+					else if (label == "E") // End
 					{
 						break;
 					}
@@ -198,7 +187,7 @@ namespace HLTStudio.Tools
 		{
 			int size = (int)SCommon.ToUInt(Read(4));
 
-			if (size < 0 || SCommon.IMAX < size) // ///// /////
+			if (size < 0 || SCommon.IMAX < size) // rough limit
 				throw new Exception("Bad size: " + size);
 
 			byte[] bStr = Read(size);
@@ -228,7 +217,3 @@ namespace HLTStudio.Tools
 		}
 	}
 }
-
-//
-// <<< Processed by SolutionConv
-//

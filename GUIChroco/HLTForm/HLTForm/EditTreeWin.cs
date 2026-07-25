@@ -1,11 +1,4 @@
-﻿// Processed by SolutionConv >>>
-//
-// 本ソースファイルは、公開時の所定の手続きとして一部のセンシティブな情報をマスキングしています。
-// 元データの機微に触れる可能性がある箇所を伏せ字化したものであり、
-// リリース版との処理内容に実質的な差異が生じない範囲で調整を加えています。
-//
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -28,7 +21,7 @@ namespace HLTStudio
 		public string[] TargetRelPaths;
 		public bool ValueChanged = false;
 
-		// //// //////
+		// <--- 引数と返却値
 
 		public EditTreeWin()
 		{
@@ -48,26 +41,26 @@ namespace HLTStudio
 
 		private void EditTreeWin_FormClosed(object sender, FormClosedEventArgs e)
 		{
-			this.MT_Clear(); // ////////////////////////////////
+			this.MT_Clear(); // ツリーが巨大な場合、クリアしないとプログラム終了に時間が掛かる。
 		}
 
-		#region ////////
+		#region MainTree
 
 		private void MainTree_AfterSelect(object sender, TreeViewEventArgs e)
 		{
-			// //// // ///////////////////
+			// none -- デザイナ、ダブルクリックで飛んでくる用
 		}
 
 		private void MainTree_Click(object sender, EventArgs e)
 		{
-			// ////////////////////////////
+			// このイベントでは、選択されたノードを取得できないらしい。
 		}
 
 		private void MainTree_NodeMouseClick(object sender, TreeNodeMouseClickEventArgs e)
 		{
 			if (e.Button == MouseButtons.Right)
 			{
-				this.MainTree.SelectedNode = e.Node; // /////////////////////////////////
+				this.MainTree.SelectedNode = e.Node; // 右クリックメニューのために、右クリックしたときもノード選択させる。
 			}
 		}
 
@@ -376,7 +369,3 @@ namespace HLTStudio
 		}
 	}
 }
-
-//
-// <<< Processed by SolutionConv
-//

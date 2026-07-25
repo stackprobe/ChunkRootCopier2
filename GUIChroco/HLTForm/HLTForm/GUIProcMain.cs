@@ -1,11 +1,4 @@
-﻿// Processed by SolutionConv >>>
-//
-// 本ソースファイルは、公開時の所定の手続きとして一部のセンシティブな情報をマスキングしています。
-// 元データの機微に触れる可能性がある箇所を伏せ字化したものであり、
-// リリース版との処理内容に実質的な差異が生じない範囲で調整を加えています。
-//
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -21,14 +14,6 @@ using HLTStudio.Commons;
 
 namespace HLTStudio
 {
-	// ////////////////////////////////////////////////////////////////////////////////
-	// ///// ///////////////////////// /////
-	// ////////////////////////////////////////////////////////////////////////////////
-	// ////////////////////////////////////////////////
-	// ////////////////////
-	// ///////////////////////////////////////
-	// ////////////////////////////////////////////////////////////////////////////////
-
 	public static class GUIProcMain
 	{
 		public static void GUIMain(Func<Form> getMainForm)
@@ -68,7 +53,7 @@ namespace HLTStudio
 
 		private static void KeepSingleInstance(Action routine)
 		{
-			// ///// ///////////////////////////////////////////
+			// HACK: 同じアプリケーションでもビルドしなおすと(バージョンが違うと)排他制御が効かなくなる。
 
 			string selfFileHash = GetSelfFileHash();
 
@@ -116,8 +101,8 @@ namespace HLTStudio
 
 				if (globalLockFailed)
 				{
-					// ////////////////
-					// ////////////////////////////////
+					// ダイアログの多重表示を防ぐため、
+					// グローバルロック解除の後・ローカルロック解除の前に表示すること。
 					MessageBox.Show(
 						"This program is already running under a different user session.",
 						Path.GetFileNameWithoutExtension(ProcMain.SelfFile) + " / Error",
@@ -185,7 +170,3 @@ namespace HLTStudio
 		}
 	}
 }
-
-//
-// <<< Processed by SolutionConv
-//

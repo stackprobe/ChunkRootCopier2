@@ -1,11 +1,4 @@
-﻿// Processed by SolutionConv >>>
-//
-// 本ソースファイルは、公開時の所定の手続きとして一部のセンシティブな情報をマスキングしています。
-// 元データの機微に触れる可能性がある箇所を伏せ字化したものであり、
-// リリース版との処理内容に実質的な差異が生じない範囲で調整を加えています。
-//
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
@@ -51,11 +44,11 @@ namespace HLTStudio
 			sheet.ColumnHeadersDefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
 
 			{
-				DataGridViewCheckBoxColumn column = new DataGridViewCheckBoxColumn(); // /////////
+				DataGridViewCheckBoxColumn column = new DataGridViewCheckBoxColumn(); // チェックボックス！
 
 				column.HeaderText = "対象";
 				column.Width = 70;
-				///////////////////// / /////////////
+				//column.MinimumWidth = column.Width;
 				column.DefaultCellStyle.Font = new Font("メイリオ", 10f, FontStyle.Regular);
 				column.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
 				column.SortMode = DataGridViewColumnSortMode.Programmatic;
@@ -69,7 +62,7 @@ namespace HLTStudio
 
 				column.HeaderText = "パス";
 				column.Width = 330;
-				///////////////////// / /////////////
+				//column.MinimumWidth = column.Width;
 				column.DefaultCellStyle.Font = new Font("メイリオ", 10f, FontStyle.Regular);
 				column.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
 				column.SortMode = DataGridViewColumnSortMode.Programmatic;
@@ -86,12 +79,12 @@ namespace HLTStudio
 			typeof(DataGridView).GetProperty("DoubleBuffered", BindingFlags.Instance | BindingFlags.NonPublic).SetValue(sheet, true, null);
 		}
 
-		// ///////
+		// 列インデックス
 		//
 		private const int COLIDX_対象 = 0;
 		private const int COLIDX_パス = 1;
 
-		// ////
+		// 行モデル
 		//
 		public class Row_t
 		{
@@ -131,7 +124,7 @@ namespace HLTStudio
 
 		private void CellContentClick(object sender, DataGridViewCellEventArgs e)
 		{
-			// ///////////////////////////////////
+			// コンテンツ部分(テキストなら文字の部分)をクリックしないと発火しない。
 		}
 
 		private void CellDoubleClick(object sender, DataGridViewCellEventArgs e)
@@ -146,10 +139,10 @@ namespace HLTStudio
 				return;
 
 			/*
-			// /////// // //////////
-			/
-				// ////
-			/
+			if (colidx != COLIDX_対象)
+			{
+				// none
+			}
 			*/
 		}
 
@@ -166,7 +159,7 @@ namespace HLTStudio
 
 			if (e.Button == MouseButtons.Right)
 			{
-				this.Sheet.Rows[rowidx].Selected = true; // ///////////////////////////////
+				this.Sheet.Rows[rowidx].Selected = true; // 右クリックメニューのために、右クリックしたときも行選択させる。
 			}
 		}
 
@@ -174,7 +167,7 @@ namespace HLTStudio
 		{
 			var hit = this.Sheet.HitTest(e.X, e.Y);
 
-			if (hit.Type == DataGridViewHitTestType.None) // / ////////////
+			if (hit.Type == DataGridViewHitTestType.None) // ? 余白部分をクリックした。
 			{
 				this.Sheet.ClearSelection();
 			}
@@ -230,7 +223,7 @@ namespace HLTStudio
 					break;
 
 				default:
-					throw null; // /////
+					throw null; // never
 			}
 			SortOrder order = this.Sheet.Columns[targetColumnIndex].HeaderCell.SortGlyphDirection;
 
@@ -266,15 +259,15 @@ namespace HLTStudio
 
 		private void AutoResizeColumn(int colidx)
 		{
-			this.Sheet.Columns[colidx].Width = 1000; // ///// /////
+			this.Sheet.Columns[colidx].Width = 1000; // rough width
 			this.Sheet.AutoResizeColumn(colidx, DataGridViewAutoSizeColumnMode.AllCells);
 		}
 
-		// ////
-		// ////////
-		// ////
+		// ====
+		// ここまで定番機能
+		// ====
 
-		// ///// ///////////////////////////////
+		// memo: 選択状態の設定はデフォルトの動作に任せず明示的に設定するべき！
 
 		public void SetRelPaths(string[] relPaths, string[] initialCheckedRelPaths)
 		{
@@ -339,7 +332,7 @@ namespace HLTStudio
 				else if (matchType == SearchCondDlg.MatchType_e.後方一致)
 					doSelectFlag = row.パス.EndsWithIgnoreCase(searchWord);
 				else
-					throw null; // /////
+					throw null; // never
 
 				this.Sheet.Rows[rowidx].Selected = doSelectFlag;
 			}
@@ -360,7 +353,3 @@ namespace HLTStudio
 		}
 	}
 }
-
-//
-// <<< Processed by SolutionConv
-//

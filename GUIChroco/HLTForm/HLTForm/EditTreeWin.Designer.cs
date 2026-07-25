@@ -1,23 +1,16 @@
-﻿// Processed by SolutionConv >>>
-//
-// 本ソースファイルは、公開時の所定の手続きとして一部のセンシティブな情報をマスキングしています。
-// 元データの機微に触れる可能性がある箇所を伏せ字化したものであり、
-// リリース版との処理内容に実質的な差異が生じない範囲で調整を加えています。
-//
-
-namespace HLTStudio
+﻿namespace HLTStudio
 {
 	partial class EditTreeWin
 	{
-		/// /////////
-		/// /////////////
-		/// //////////
+		/// <summary>
+		/// 必要なデザイナー変数です。
+		/// </summary>
 		private System.ComponentModel.IContainer components = null;
 
-		/// /////////
-		/// ///////////////////////
-		/// //////////
-		/// ////// ///////////////////// //////////// ////////////// ///// ///////////
+		/// <summary>
+		/// 使用中のリソースをすべてクリーンアップします。
+		/// </summary>
+		/// <param name="disposing">マネージ リソースが破棄される場合 true、破棄されない場合は false です。</param>
 		protected override void Dispose(bool disposing)
 		{
 			if (disposing && (components != null))
@@ -27,12 +20,12 @@ namespace HLTStudio
 			base.Dispose(disposing);
 		}
 
-		#region /////// //// //////////////
+		#region Windows フォーム デザイナーで生成されたコード
 
-		/// /////////
-		/// ///// /////////////////////////
-		/// /// /////////////////
-		/// //////////
+		/// <summary>
+		/// デザイナー サポートに必要なメソッドです。このメソッドの内容を
+		/// コード エディターで変更しないでください。
+		/// </summary>
 		private void InitializeComponent()
 		{
 			this.components = new System.ComponentModel.Container();
@@ -54,7 +47,7 @@ namespace HLTStudio
 			this.MainTreeMenu.SuspendLayout();
 			this.SuspendLayout();
 			// 
-			// /////
+			// BtnOK
 			// 
 			this.BtnOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
 			this.BtnOK.Location = new System.Drawing.Point(652, 423);
@@ -65,7 +58,7 @@ namespace HLTStudio
 			this.BtnOK.UseVisualStyleBackColor = true;
 			this.BtnOK.Click += new System.EventHandler(this.BtnOK_Click);
 			// 
-			// ////////
+			// Btnキャンセル
 			// 
 			this.Btnキャンセル.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
 			this.Btnキャンセル.Location = new System.Drawing.Point(652, 489);
@@ -76,7 +69,7 @@ namespace HLTStudio
 			this.Btnキャンセル.UseVisualStyleBackColor = true;
 			this.Btnキャンセル.Click += new System.EventHandler(this.Btnキャンセル_Click);
 			// 
-			// ////////////
+			// MainTreeMenu
 			// 
 			this.MainTreeMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.MainTreeMenu_配下を全て開く,
@@ -91,64 +84,64 @@ namespace HLTStudio
 			this.MainTreeMenu.Name = "MainTreeMenu";
 			this.MainTreeMenu.Size = new System.Drawing.Size(257, 154);
 			// 
-			// ////////////////////
+			// MainTreeMenu_配下を全て開く
 			// 
 			this.MainTreeMenu_配下を全て開く.Name = "MainTreeMenu_配下を全て開く";
 			this.MainTreeMenu_配下を全て開く.Size = new System.Drawing.Size(256, 22);
 			this.MainTreeMenu_配下を全て開く.Text = "配下を全て開く(&O)";
 			this.MainTreeMenu_配下を全て開く.Click += new System.EventHandler(this.MainTreeMenu_配下を全て開く_Click);
 			// 
-			// /////////////////////
+			// MainTreeMenu_配下を全て閉じる
 			// 
 			this.MainTreeMenu_配下を全て閉じる.Name = "MainTreeMenu_配下を全て閉じる";
 			this.MainTreeMenu_配下を全て閉じる.Size = new System.Drawing.Size(256, 22);
 			this.MainTreeMenu_配下を全て閉じる.Text = "配下を全て閉じる(&C)";
 			this.MainTreeMenu_配下を全て閉じる.Click += new System.EventHandler(this.MainTreeMenu_配下を全て閉じる_Click);
 			// 
-			// ////
+			// S001
 			// 
 			this.S001.Name = "S001";
 			this.S001.Size = new System.Drawing.Size(253, 6);
 			// 
-			// ///////////////////////
+			// MainTreeMenu_配下も含めて選択オン
 			// 
 			this.MainTreeMenu_配下も含めて選択オン.Name = "MainTreeMenu_配下も含めて選択オン";
 			this.MainTreeMenu_配下も含めて選択オン.Size = new System.Drawing.Size(256, 22);
 			this.MainTreeMenu_配下も含めて選択オン.Text = "配下も含めて選択する(&S)";
 			this.MainTreeMenu_配下も含めて選択オン.Click += new System.EventHandler(this.MainTreeMenu_配下も含めて選択オン_Click);
 			// 
-			// ///////////////////////
+			// MainTreeMenu_配下も含めて選択オフ
 			// 
 			this.MainTreeMenu_配下も含めて選択オフ.Name = "MainTreeMenu_配下も含めて選択オフ";
 			this.MainTreeMenu_配下も含めて選択オフ.Size = new System.Drawing.Size(256, 22);
 			this.MainTreeMenu_配下も含めて選択オフ.Text = "配下も含めて選択解除(&U)";
 			this.MainTreeMenu_配下も含めて選択オフ.Click += new System.EventHandler(this.MainTreeMenu_配下も含めて選択オフ_Click);
 			// 
-			// ////
+			// S002
 			// 
 			this.S002.Name = "S002";
 			this.S002.Size = new System.Drawing.Size(253, 6);
 			// 
-			// //////////////////////////////
+			// MainTreeMenu_チェックされている項目のみ展開する
 			// 
 			this.MainTreeMenu_チェックされている項目のみ展開する.Name = "MainTreeMenu_チェックされている項目のみ展開する";
 			this.MainTreeMenu_チェックされている項目のみ展開する.Size = new System.Drawing.Size(256, 22);
 			this.MainTreeMenu_チェックされている項目のみ展開する.Text = "チェックされている項目のみ展開する(&L)";
 			this.MainTreeMenu_チェックされている項目のみ展開する.Click += new System.EventHandler(this.MainTreeMenu_チェックされている項目のみ展開する_Click);
 			// 
-			// ////
+			// S003
 			// 
 			this.S003.Name = "S003";
 			this.S003.Size = new System.Drawing.Size(253, 6);
 			// 
-			// //////////////////////
+			// MainTreeMenu_チェック状態の確認
 			// 
 			this.MainTreeMenu_チェック状態の確認.Name = "MainTreeMenu_チェック状態の確認";
 			this.MainTreeMenu_チェック状態の確認.Size = new System.Drawing.Size(256, 22);
 			this.MainTreeMenu_チェック状態の確認.Text = "チェック状態の確認";
 			this.MainTreeMenu_チェック状態の確認.Click += new System.EventHandler(this.MainTreeMenu_チェック状態の確認_Click);
 			// 
-			// /////////////
+			// Btnチェックのみ展開する
 			// 
 			this.Btnチェックのみ展開する.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
 			this.Btnチェックのみ展開する.Location = new System.Drawing.Point(652, 12);
@@ -159,7 +152,7 @@ namespace HLTStudio
 			this.Btnチェックのみ展開する.UseVisualStyleBackColor = true;
 			this.Btnチェックのみ展開する.Click += new System.EventHandler(this.Btnチェックのみ展開する_Click);
 			// 
-			// ////////
+			// MainTree
 			// 
 			this.MainTree.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
@@ -175,7 +168,7 @@ namespace HLTStudio
 			this.MainTree.NodeMouseClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.MainTree_NodeMouseClick);
 			this.MainTree.Click += new System.EventHandler(this.MainTree_Click);
 			// 
-			// ///////////
+			// EditTreeWin
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -218,6 +211,3 @@ namespace HLTStudio
 	}
 }
 
-//
-// <<< Processed by SolutionConv
-//

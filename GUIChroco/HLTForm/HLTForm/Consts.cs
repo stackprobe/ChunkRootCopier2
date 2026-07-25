@@ -1,11 +1,4 @@
-﻿// Processed by SolutionConv >>>
-//
-// 本ソースファイルは、公開時の所定の手続きとして一部のセンシティブな情報をマスキングしています。
-// 元データの機微に触れる可能性がある箇所を伏せ字化したものであり、
-// リリース版との処理内容に実質的な差異が生じない範囲で調整を加えています。
-//
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -22,21 +15,17 @@ namespace HLTStudio
 		{
 			get
 			{
-				string file = Path.Combine(ProcMain.SelfDir, @"..\Chroco\Chroco.exe"); // /////
+				string file = Path.Combine(ProcMain.SelfDir, @"..\Chroco\Chroco.exe"); // リリース時
 
 				if (!File.Exists(file))
 				{
-					file = Path.Combine(ProcMain.SelfDir, @"..\..\..\..\..\Chroco\HLTConsole\HLTConsole\bin\Release\HLTConsole.exe"); // ////
+					file = Path.Combine(ProcMain.SelfDir, @"..\..\..\..\..\Chroco\HLTConsole\HLTConsole\bin\Release\HLTConsole.exe"); // 開発環境
 
 					if (!File.Exists(file))
-						throw null; // //////////////
+						throw null; // ファイルが無い！ビルドして！
 				}
 				return file;
 			}
 		}
 	}
 }
-
-//
-// <<< Processed by SolutionConv
-//

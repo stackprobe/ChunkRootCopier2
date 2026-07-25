@@ -1,11 +1,4 @@
-﻿// Processed by SolutionConv >>>
-//
-// 本ソースファイルは、公開時の所定の手続きとして一部のセンシティブな情報をマスキングしています。
-// 元データの機微に触れる可能性がある箇所を伏せ字化したものであり、
-// リリース版との処理内容に実質的な差異が生じない範囲で調整を加えています。
-//
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -14,14 +7,6 @@ using System.Diagnostics;
 
 namespace HLTStudio.Commons
 {
-	// ////////////////////////////////////////////////////////////////////////////////
-	// ///// ///////////////////////// /////
-	// ////////////////////////////////////////////////////////////////////////////////
-	// ////////////////////////////////////////////////
-	// ////////////////////
-	// ///////////////////////////////////////
-	// ////////////////////////////////////////////////////////////////////////////////
-
 	public class WorkingDir : IDisposable
 	{
 		public static RootInfo Root = null;
@@ -75,7 +60,7 @@ namespace HLTStudio.Commons
 				if (
 					!string.IsNullOrEmpty(dir) &&
 					SCommon.IsFairFullPath(dir) &&
-					!dir.Contains('\u0020') && !dir.Contains('\u3000') && // //////////
+					!dir.Contains('\u0020') && !dir.Contains('\u3000') && // 空白を含まないこと。
 					Directory.Exists(dir)
 					)
 					return dir;
@@ -135,15 +120,15 @@ namespace HLTStudio.Commons
 			}
 		}
 
-		/// /////////
-		/// ////////////////////////
-		/// ///////////////////////////
-		/// //////////////////////
-		/// /////////////////////////////////
-		/// /// ////////// //////////////////////////
-		/// ////////////////////////////////////////
-		/// //////////
-		/// ////// //////////////////////////////
+		/// <summary>
+		/// 非常手段として一時作業ディレクトリを差し替える。
+		/// 差し替え先のディレクトリは既に存在している必要がある。
+		/// 指定したディレクトリはルートとして使用され、
+		/// 個別の一時作業ディレクトリはその配下にユニークな名前で作成される。
+		/// 従って "C:\\temp" のように広く利用されるディレクトリを指定してもよい。
+		/// 使用例：WorkingDir.ChangeTMPDir("C:\\temp");
+		/// </summary>
+		/// <param name="dir">差し替え先ディレクトリ</param>
 		public static void ChangeTMPDir(string dir)
 		{
 			dir = SCommon.MakeFullPath(dir);
@@ -163,10 +148,10 @@ namespace HLTStudio.Commons
 
 		private static WorkingDir CommonWD = null;
 
-		/// /////////
-		/// /////////////////////
-		/// //////////
-		/// ////////////////////////////////////
+		/// <summary>
+		/// プロセス寿命の共通一時ディレクトリを返す。
+		/// </summary>
+		/// <returns>プロセス寿命の共通一時ディレクトリ</returns>
 		public static string GetCommonDir()
 		{
 			if (CommonWD == null)
@@ -176,7 +161,3 @@ namespace HLTStudio.Commons
 		}
 	}
 }
-
-//
-// <<< Processed by SolutionConv
-//

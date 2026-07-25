@@ -1,11 +1,4 @@
-﻿// Processed by SolutionConv >>>
-//
-// 本ソースファイルは、公開時の所定の手続きとして一部のセンシティブな情報をマスキングしています。
-// 元データの機微に触れる可能性がある箇所を伏せ字化したものであり、
-// リリース版との処理内容に実質的な差異が生じない範囲で調整を加えています。
-//
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -152,7 +145,7 @@ namespace HLTStudio.Dialogs
 						initialSelectedPath = SCommon.MakeFullPath(this.TxtPath.Text);
 
 						if (!Directory.Exists(initialSelectedPath))
-							throw new SCommon.GotoCatchException();
+							throw null; // goto catch
 					}
 					catch
 					{
@@ -173,7 +166,7 @@ namespace HLTStudio.Dialogs
 							string selectedPath = SCommon.MakeFullPath(fbd.SelectedPath);
 
 							if (!Directory.Exists(selectedPath))
-								throw null; // /////////////////////
+								throw null; // 存在しないディレクトリは選択できないはず！
 
 							this.TxtPath.Text = selectedPath;
 						}
@@ -227,7 +220,3 @@ namespace HLTStudio.Dialogs
 		}
 	}
 }
-
-//
-// <<< Processed by SolutionConv
-//

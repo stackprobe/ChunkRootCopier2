@@ -1,23 +1,16 @@
-﻿// Processed by SolutionConv >>>
-//
-// 本ソースファイルは、公開時の所定の手続きとして一部のセンシティブな情報をマスキングしています。
-// 元データの機微に触れる可能性がある箇所を伏せ字化したものであり、
-// リリース版との処理内容に実質的な差異が生じない範囲で調整を加えています。
-//
-
-namespace HLTStudio
+﻿namespace HLTStudio
 {
 	partial class SearchCondDlg
 	{
-		/// /////////
-		/// //////// //////// /////////
-		/// //////////
+		/// <summary>
+		/// Required designer variable.
+		/// </summary>
 		private System.ComponentModel.IContainer components = null;
 
-		/// /////////
-		/// ///// // /// ///////// ///// /////
-		/// //////////
-		/// ////// ///////////////////// // /////// ///////// ////// // ///////// ////////// //////////////
+		/// <summary>
+		/// Clean up any resources being used.
+		/// </summary>
+		/// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
 		protected override void Dispose(bool disposing)
 		{
 			if (disposing && (components != null))
@@ -27,12 +20,12 @@ namespace HLTStudio
 			base.Dispose(disposing);
 		}
 
-		#region /////// //// //////// ///////// ////
+		#region Windows Form Designer generated code
 
-		/// /////////
-		/// //////// ////// /// //////// /////// / // /// //////
-		/// /// //////// // //// ////// //// /// //// ///////
-		/// //////////
+		/// <summary>
+		/// Required method for Designer support - do not modify
+		/// the contents of this method with the code editor.
+		/// </summary>
 		private void InitializeComponent()
 		{
 			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SearchCondDlg));
@@ -48,7 +41,7 @@ namespace HLTStudio
 			this.G001.SuspendLayout();
 			this.SuspendLayout();
 			// 
-			// /////////////
+			// TxtSearchWord
 			// 
 			this.TxtSearchWord.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
@@ -59,7 +52,7 @@ namespace HLTStudio
 			this.TxtSearchWord.TabIndex = 1;
 			this.TxtSearchWord.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.TxtSearchWord_KeyPress);
 			// 
-			// ////
+			// G001
 			// 
 			this.G001.Controls.Add(this.RdBtn後方一致);
 			this.G001.Controls.Add(this.RdBtn部分一致);
@@ -71,7 +64,7 @@ namespace HLTStudio
 			this.G001.TabStop = false;
 			this.G001.Text = "一致パターン";
 			// 
-			// /////////
+			// RdBtn後方一致
 			// 
 			this.RdBtn後方一致.AutoSize = true;
 			this.RdBtn後方一致.Location = new System.Drawing.Point(20, 100);
@@ -82,7 +75,7 @@ namespace HLTStudio
 			this.RdBtn後方一致.UseVisualStyleBackColor = true;
 			this.RdBtn後方一致.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.RdBtn後方一致_KeyPress);
 			// 
-			// /////////
+			// RdBtn部分一致
 			// 
 			this.RdBtn部分一致.AutoSize = true;
 			this.RdBtn部分一致.Checked = true;
@@ -95,7 +88,7 @@ namespace HLTStudio
 			this.RdBtn部分一致.UseVisualStyleBackColor = true;
 			this.RdBtn部分一致.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.RdBtn部分一致_KeyPress);
 			// 
-			// /////////
+			// RdBtn完全一致
 			// 
 			this.RdBtn完全一致.AutoSize = true;
 			this.RdBtn完全一致.Location = new System.Drawing.Point(20, 40);
@@ -106,7 +99,7 @@ namespace HLTStudio
 			this.RdBtn完全一致.UseVisualStyleBackColor = true;
 			this.RdBtn完全一致.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.RdBtn完全一致_KeyPress);
 			// 
-			// ////
+			// L001
 			// 
 			this.L001.AutoSize = true;
 			this.L001.Location = new System.Drawing.Point(12, 9);
@@ -115,7 +108,7 @@ namespace HLTStudio
 			this.L001.TabIndex = 0;
 			this.L001.Text = "検索文字列：";
 			// 
-			// ////////
+			// Btnキャンセル
 			// 
 			this.Btnキャンセル.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
 			this.Btnキャンセル.Location = new System.Drawing.Point(518, 155);
@@ -126,7 +119,7 @@ namespace HLTStudio
 			this.Btnキャンセル.UseVisualStyleBackColor = true;
 			this.Btnキャンセル.Click += new System.EventHandler(this.Btnキャンセル_Click);
 			// 
-			// /////
+			// Btn検索
 			// 
 			this.Btn検索.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
 			this.Btn検索.Location = new System.Drawing.Point(392, 155);
@@ -137,7 +130,7 @@ namespace HLTStudio
 			this.Btn検索.UseVisualStyleBackColor = true;
 			this.Btn検索.Click += new System.EventHandler(this.Btn検索_Click);
 			// 
-			// ////
+			// L002
 			// 
 			this.L002.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
 			this.L002.AutoSize = true;
@@ -148,7 +141,7 @@ namespace HLTStudio
 			this.L002.TabIndex = 3;
 			this.L002.Text = "検索にヒットした行を選択状態にします。";
 			// 
-			// /////////////
+			// SearchCondDlg
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -191,7 +184,3 @@ namespace HLTStudio
 		private System.Windows.Forms.RadioButton RdBtn後方一致;
 	}
 }
-
-//
-// <<< Processed by SolutionConv
-//

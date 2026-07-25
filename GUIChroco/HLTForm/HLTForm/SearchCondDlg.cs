@@ -1,11 +1,4 @@
-﻿// Processed by SolutionConv >>>
-//
-// 本ソースファイルは、公開時の所定の手続きとして一部のセンシティブな情報をマスキングしています。
-// 元データの機微に触れる可能性がある箇所を伏せ字化したものであり、
-// リリース版との処理内容に実質的な差異が生じない範囲で調整を加えています。
-//
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -31,7 +24,7 @@ namespace HLTStudio
 		public MatchType_e MatchType;
 		public bool ExecuteFlag = false;
 
-		// //// ///
+		// <--- 返却値
 
 		public SearchCondDlg()
 		{
@@ -55,7 +48,7 @@ namespace HLTStudio
 				case MatchType_e.後方一致: this.RdBtn後方一致.Checked = true; break;
 
 				default:
-					throw null; // /////
+					throw null; // never
 			}
 		}
 
@@ -70,12 +63,12 @@ namespace HLTStudio
 			else if (this.RdBtn後方一致.Checked)
 				Settings.SCD_LastMatchType = MatchType_e.後方一致;
 			else
-				throw null; // /////
+				throw null; // never
 		}
 
 		private void TxtSearchWord_KeyPress(object sender, KeyPressEventArgs e)
 		{
-			if (e.KeyChar == 13) // /////
+			if (e.KeyChar == 13) // Enter
 			{
 				this.Btn検索_Click(null, null);
 			}
@@ -83,7 +76,7 @@ namespace HLTStudio
 
 		private void RdBtn完全一致_KeyPress(object sender, KeyPressEventArgs e)
 		{
-			if (e.KeyChar == 13) // /////
+			if (e.KeyChar == 13) // Enter
 			{
 				this.Btn検索_Click(null, null);
 			}
@@ -91,7 +84,7 @@ namespace HLTStudio
 
 		private void RdBtn部分一致_KeyPress(object sender, KeyPressEventArgs e)
 		{
-			if (e.KeyChar == 13) // /////
+			if (e.KeyChar == 13) // Enter
 			{
 				this.Btn検索_Click(null, null);
 			}
@@ -99,7 +92,7 @@ namespace HLTStudio
 
 		private void RdBtn後方一致_KeyPress(object sender, KeyPressEventArgs e)
 		{
-			if (e.KeyChar == 13) // /////
+			if (e.KeyChar == 13) // Enter
 			{
 				this.Btn検索_Click(null, null);
 			}
@@ -119,7 +112,7 @@ namespace HLTStudio
 				else if (this.RdBtn後方一致.Checked)
 					matchType = MatchType_e.後方一致;
 				else
-					throw null; // /////
+					throw null; // never
 
 				this.SearchWord = this.TxtSearchWord.Text;
 				this.MatchType = matchType;
@@ -156,7 +149,3 @@ namespace HLTStudio
 		}
 	}
 }
-
-//
-// <<< Processed by SolutionConv
-//

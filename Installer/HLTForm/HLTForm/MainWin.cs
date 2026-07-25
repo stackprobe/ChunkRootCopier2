@@ -1,11 +1,4 @@
-﻿// Processed by SolutionConv >>>
-//
-// 本ソースファイルは、公開時の所定の手続きとして一部のセンシティブな情報をマスキングしています。
-// 元データの機微に触れる可能性がある箇所を伏せ字化したものであり、
-// リリース版との処理内容に実質的な差異が生じない範囲で調整を加えています。
-//
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -29,18 +22,9 @@ namespace HLTStudio
 		{
 			this.MinimumSize = this.Size;
 
-			this.Text = $"{Consts.APPLICATION_NAME} インストーラ　( ビルド番号：{GetRevisionCode()} )";
-			this.LMainMessage.Text = $"「{Consts.APPLICATION_NAME}」をインストールします。";
+			this.Text = $"{Consts.APPLICATION_NAME} インストーラ";
+			this.LMainMessage.Text = $"「{Consts.APPLICATION_LONG_NAME}」をインストールします。";
 			this.TxtInstallDir.Text = Consts.DEFAULT_INSTALL_DIR;
-		}
-
-		private static string GetRevisionCode()
-		{
-			DateTime dt = ExecutableFileTools.GetBuiltDateTime(ProcMain.SelfFile);
-
-			int shouwaEraYear = dt.Year - 1925;
-
-			return $"v{shouwaEraYear}-{dt.Month * 31 + dt.Day:D3}-{dt.Hour * 3600 + dt.Minute * 60 + dt.Second:D5}";
 		}
 
 		private void MainWin_Shown(object sender, EventArgs e)
@@ -67,7 +51,7 @@ namespace HLTStudio
 
 		private void SetInitialFocus()
 		{
-			/////////////////////////
+			//this.BtnBrowse.Focus();
 			this.BtnResetInstallDir.Focus();
 		}
 
@@ -80,10 +64,10 @@ namespace HLTStudio
 				{
 					string initialSelectedPath = this.TxtInstallDir.Text;
 
-					// ///////////////
+					// アプリケーション名を除去する。
 					initialSelectedPath = SCommon.ToParentPath(initialSelectedPath);
 
-					// ////////////
+					// 未作成の場合は更に遡る。
 					while (
 						!SCommon.IsAbsRootDir(initialSelectedPath) &&
 						!Directory.Exists(initialSelectedPath)
@@ -105,14 +89,14 @@ namespace HLTStudio
 						{
 							string installDir = SCommon.MakeFullPath(fbd.SelectedPath);
 
-							// ///////////////
+							// ベンダーフォルダ名を追加する。
 							if (
 								!installDir.EndsWithIgnoreCase($"\\{Consts.VENDOR_FOLDER_NAME}") &&
 								!installDir.EndsWithIgnoreCase($"\\{Consts.VENDOR_FOLDER_NAME}\\{Consts.APPLICATION_NAME}")
 								)
 								installDir = Path.Combine(installDir, Consts.VENDOR_FOLDER_NAME);
 
-							// ///////////////
+							// アプリケーション名を追加する。
 							if (!installDir.EndsWithIgnoreCase($"\\{Consts.APPLICATION_NAME}"))
 								installDir = Path.Combine(installDir, Consts.APPLICATION_NAME);
 
@@ -165,17 +149,7 @@ namespace HLTStudio
 			{ }
 		}
 
-		private void FormMenu_ビルド番号をクリップボードにコピーする_Click(object sender, EventArgs e)
-		{
-			try
-			{
-				Clipboard.SetText(GetRevisionCode());
-			}
-			catch
-			{ }
-		}
-
-		#region //////
+		#region インストール
 
 		private void BtnInstall_Click(object sender, EventArgs e)
 		{
@@ -224,9 +198,9 @@ namespace HLTStudio
 			this.SetInitialFocus();
 		}
 
-		/// /////////
-		/// /////////////////
-		/// //////////
+		/// <summary>
+		/// インストールを実行する。Ph-01
+		/// </summary>
 		private void DoInstall()
 		{
 			string installDir = this.TxtInstallDir.Text;
@@ -271,12 +245,12 @@ namespace HLTStudio
 				}
 			}
 
-			// //
+			// 確認
 			{
 				int ret = MessageDlg.Run(
 					MessageDlg.Kind_e.Question,
 					"インストール実行の確認",
-					$"「{Consts.APPLICATION_NAME}」のインストールを実行します。",
+					$"「{Consts.APPLICATION_LONG_NAME}」のインストールを実行します。",
 					null,
 					new string[] { "OK", "キャンセル" }
 					);
@@ -295,14 +269,14 @@ namespace HLTStudio
 			});
 		}
 
-		/// /////////
-		/// /////////////////
-		/// /////////////////////
-		/// //////////
-		/// //////////
-		/// ////// /////////////////////////////////
-		/// ////// ////////////////////////////////
-		/// ////// ///////////////////////////////////////////////
+		/// <summary>
+		/// インストールを実行する。Ph-02
+		/// ワーカースレッド内で実行されることに注意！
+		/// 例外を投げても良い。
+		/// </summary>
+		/// <param name="installDir">インストール先</param>
+		/// <param name="sigFile">シグネチャファイル</param>
+		/// <param name="createShortcutFlag">ショートカットを作成するか</param>
 		private void DoInstallWkTh(
 			string installDir,
 			string sigFile,
@@ -327,7 +301,7 @@ namespace HLTStudio
 					throw new Exception($"クラスタファイル「{fileName}」が破損しています。");
 			}
 
-			if (Directory.Exists(installDir)) // //////////////////////
+			if (Directory.Exists(installDir)) // インストール先フォルダのハンドル残存チェック
 			{
 				string escapeDir = SCommon.ToCreatablePath(installDir);
 
@@ -335,22 +309,24 @@ namespace HLTStudio
 				{
 					SCommon.EnsureMoveDir(installDir, escapeDir);
 				}
-				catch (Exception ex)
+				//catch (Exception ex)
+				catch
 				{
-					throw new Exception("インストール先のフォルダは現在使用されています。", ex);
+					//throw new Exception("インストール先のフォルダは現在使用されています。", ex);
+					throw new Exception("インストール先のフォルダは現在使用されています。");
 				}
 
-				// /////
-				// //////////////////////////////////
-				// /////////////////////////////
+				// memo:
+				// インストール先にはデータベースなどが作成されているかもしれないので、
+				// インストール先そのものの削除・再作成は行わないようにする！
 
-				SCommon.EnsureMoveDir(escapeDir, installDir); // /////
+				SCommon.EnsureMoveDir(escapeDir, installDir); // 元に戻す。
 			}
 			SCommon.CreateDir(installDir);
 
-			// /////
-			// /////////////////////////////
-			// ////////////////////////
+			// memo:
+			// 既インストール先にデータベースなどが存在することを想定し、
+			// 必要なフォルダ・ファイルのみ削除・再作成を行う！
 
 			SCommon.DeletePath(sigFile);
 			File.WriteAllBytes(sigFile, SCommon.EMPTY_BYTES);
@@ -371,18 +347,18 @@ namespace HLTStudio
 		{
 			int p = fileName.LastIndexOf('.');
 
-			if (p == -1) // / ///////
-				throw null; // /////
+			if (p == -1) // ? 見つからない。
+				throw null; // never
 
-			if (p == 0) // / ///////////
-				throw null; // /////
+			if (p == 0) // ? 拡張子で始まっている。
+				throw null; // never
 
 			return fileName.Substring(0, p);
 		}
 
 		#endregion
 
-		#region ////////
+		#region アンインストール
 
 		private void BtnUninstall_Click(object sender, EventArgs e)
 		{
@@ -431,15 +407,15 @@ namespace HLTStudio
 			this.SetInitialFocus();
 		}
 
-		/// /////////
-		/// ///////////////////
-		/// //////////
+		/// <summary>
+		/// アンインストールを実行する。Ph-01
+		/// </summary>
 		private void DoUninstall()
 		{
 			string installDir = this.TxtInstallDir.Text;
 			bool removeShortcutFlag = false;
 
-			// ////////////
+			// ショートカット削除の確認
 			{
 				string shortcutPath = ShortcutCreator.GetShortcutPath();
 
@@ -462,12 +438,12 @@ namespace HLTStudio
 				}
 			}
 
-			// //
+			// 確認
 			{
 				int ret = MessageDlg.Run(
 					MessageDlg.Kind_e.Warning,
 					"アンインストール実行の確認",
-					$"「{Consts.APPLICATION_NAME}」をアンインストールします。\r\n"
+					$"「{Consts.APPLICATION_LONG_NAME}」をアンインストールします。\r\n"
 					+ "インストール先フォルダにある全てのファイルが削除されます。\r\n"
 					+ "実行してよろしいですか？\r\n"
 					+ $"( ショートカットの削除：{(removeShortcutFlag ? "する" : "しない")} )",
@@ -488,13 +464,13 @@ namespace HLTStudio
 			});
 		}
 
-		/// /////////
-		/// ///////////////////
-		/// /////////////////////
-		/// //////////
-		/// //////////
-		/// ////// /////////////////////////////////
-		/// ////// ///////////////////////////////////////////////
+		/// <summary>
+		/// アンインストールを実行する。Ph-02
+		/// ワーカースレッド内で実行されることに注意！
+		/// 例外を投げても良い。
+		/// </summary>
+		/// <param name="installDir">インストール先</param>
+		/// <param name="removeShortcutFlag">ショートカットを削除するか</param>
 		private void DoUninstallWkTh(
 			string installDir,
 			bool removeShortcutFlag
@@ -505,7 +481,7 @@ namespace HLTStudio
 
 			string vendorFolder = SCommon.ToParentPath(installDir);
 
-			// ////////////////////// // //
+			// インストール先フォルダのハンドル残存チェック -> 削除
 			{
 				string escapeDir = SCommon.ToCreatablePath(installDir);
 
@@ -513,15 +489,17 @@ namespace HLTStudio
 				{
 					SCommon.EnsureMoveDir(installDir, escapeDir);
 				}
-				catch (Exception ex)
+				//catch (Exception ex)
+				catch
 				{
-					throw new Exception("インストール先のフォルダは現在使用されています。", ex);
+					//throw new Exception("インストール先のフォルダは現在使用されています。", ex);
+					throw new Exception("インストール先のフォルダは現在使用されています。");
 				}
 
 				SCommon.DeletePath(escapeDir);
 			}
 
-			// ////////////////////
+			// 可能であればベンダーフォルダも削除する。
 			{
 				string[] strPaths = Directory.GetDirectories(vendorFolder)
 					.Concat(Directory.GetFiles(vendorFolder))
@@ -545,7 +523,3 @@ namespace HLTStudio
 		#endregion
 	}
 }
-
-//
-// <<< Processed by SolutionConv
-//

@@ -1,11 +1,4 @@
-﻿// Processed by SolutionConv >>>
-//
-// 本ソースファイルは、公開時の所定の手続きとして一部のセンシティブな情報をマスキングしています。
-// 元データの機微に触れる可能性がある箇所を伏せ字化したものであり、
-// リリース版との処理内容に実質的な差異が生じない範囲で調整を加えています。
-//
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -26,7 +19,7 @@ namespace HLTStudio
 		public string[] TargetRelPaths;
 		public bool ValueChanged = false;
 
-		// //// //////
+		// <--- 引数と返却値
 
 		private EditListWin_MainSheetModel MainSheetModel;
 
@@ -42,7 +35,7 @@ namespace HLTStudio
 
 		private void EditListWin_Shown(object sender, EventArgs e)
 		{
-			// ///// /////////////////////////////////////////////////////////////
+			// HACK: Shown_に時間が掛かるとタスクバーのアイコンがデフォルトになってしまう。アイコンが表示されるまでちょっと待つ。(暫定)
 			//
 			new Thread(() =>
 			{
@@ -156,7 +149,3 @@ namespace HLTStudio
 		}
 	}
 }
-
-//
-// <<< Processed by SolutionConv
-//

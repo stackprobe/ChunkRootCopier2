@@ -1,11 +1,4 @@
-﻿// Processed by SolutionConv >>>
-//
-// 本ソースファイルは、公開時の所定の手続きとして一部のセンシティブな情報をマスキングしています。
-// 元データの機微に触れる可能性がある箇所を伏せ字化したものであり、
-// リリース版との処理内容に実質的な差異が生じない範囲で調整を加えています。
-//
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -137,14 +130,14 @@ namespace HLTStudio.Tools
 			{
 				node = q.Dequeue();
 
-				// ///
+				// 正規化
 				{
 					node.Name = node.Name ?? "";
 					node.Value = node.Value ?? "";
 
-					// ///////// / ///// /////////////
+					// XmlReader が &xxx; を変換(復元)してくれる。
 
-					// ///////
+					// 名前空間を除去
 					{
 						int colon = node.Name.IndexOf(':');
 
@@ -175,7 +168,7 @@ namespace HLTStudio.Tools
 			string name = node.Name;
 			string value = node.Value;
 
-			// //////////////
+			// ノード(タグ名・値)の正規化
 			{
 				name = name ?? "";
 				value = value ?? "";
@@ -215,7 +208,7 @@ namespace HLTStudio.Tools
 			string name = node.Name;
 			string value = node.Value;
 
-			// ///////////////
+			// 属性(属性名・属性値)の正規化
 			{
 				name = name ?? "";
 				value = value ?? "";
@@ -269,7 +262,3 @@ namespace HLTStudio.Tools
 		}
 	}
 }
-
-//
-// <<< Processed by SolutionConv
-//

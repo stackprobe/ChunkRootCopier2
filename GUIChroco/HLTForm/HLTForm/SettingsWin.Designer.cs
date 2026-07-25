@@ -1,23 +1,16 @@
-﻿// Processed by SolutionConv >>>
-//
-// 本ソースファイルは、公開時の所定の手続きとして一部のセンシティブな情報をマスキングしています。
-// 元データの機微に触れる可能性がある箇所を伏せ字化したものであり、
-// リリース版との処理内容に実質的な差異が生じない範囲で調整を加えています。
-//
-
-namespace HLTStudio
+﻿namespace HLTStudio
 {
 	partial class SettingsWin
 	{
-		/// /////////
-		/// //////// //////// /////////
-		/// //////////
+		/// <summary>
+		/// Required designer variable.
+		/// </summary>
 		private System.ComponentModel.IContainer components = null;
 
-		/// /////////
-		/// ///// // /// ///////// ///// /////
-		/// //////////
-		/// ////// ///////////////////// // /////// ///////// ////// // ///////// ////////// //////////////
+		/// <summary>
+		/// Clean up any resources being used.
+		/// </summary>
+		/// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
 		protected override void Dispose(bool disposing)
 		{
 			if (disposing && (components != null))
@@ -27,12 +20,12 @@ namespace HLTStudio
 			base.Dispose(disposing);
 		}
 
-		#region /////// //// //////// ///////// ////
+		#region Windows Form Designer generated code
 
-		/// /////////
-		/// //////// ////// /// //////// /////// / // /// //////
-		/// /// //////// // //// ////// //// /// //// ///////
-		/// //////////
+		/// <summary>
+		/// Required method for Designer support - do not modify
+		/// the contents of this method with the code editor.
+		/// </summary>
 		private void InitializeComponent()
 		{
 			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SettingsWin));
@@ -43,7 +36,7 @@ namespace HLTStudio
 			this.Btnデフォルトに戻す = new System.Windows.Forms.Button();
 			this.SuspendLayout();
 			// 
-			// ////////
+			// Btnキャンセル
 			// 
 			this.Btnキャンセル.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
 			this.Btnキャンセル.Location = new System.Drawing.Point(412, 149);
@@ -54,7 +47,7 @@ namespace HLTStudio
 			this.Btnキャンセル.UseVisualStyleBackColor = true;
 			this.Btnキャンセル.Click += new System.EventHandler(this.Btnキャンセル_Click);
 			// 
-			// /////
+			// BtnOK
 			// 
 			this.BtnOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
 			this.BtnOK.Location = new System.Drawing.Point(286, 149);
@@ -65,7 +58,7 @@ namespace HLTStudio
 			this.BtnOK.UseVisualStyleBackColor = true;
 			this.BtnOK.Click += new System.EventHandler(this.BtnOK_Click);
 			// 
-			// ///////////////////////
+			// TxtLoadablePathCountMax
 			// 
 			this.TxtLoadablePathCountMax.Location = new System.Drawing.Point(211, 57);
 			this.TxtLoadablePathCountMax.MaxLength = 10;
@@ -75,7 +68,7 @@ namespace HLTStudio
 			this.TxtLoadablePathCountMax.Text = "9999999999";
 			this.TxtLoadablePathCountMax.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
 			// 
-			// ////
+			// L001
 			// 
 			this.L001.AutoSize = true;
 			this.L001.Location = new System.Drawing.Point(40, 60);
@@ -84,7 +77,7 @@ namespace HLTStudio
 			this.L001.TabIndex = 0;
 			this.L001.Text = "ロード可能なパス数の上限";
 			// 
-			// ///////////
+			// Btnデフォルトに戻す
 			// 
 			this.Btnデフォルトに戻す.Location = new System.Drawing.Point(337, 57);
 			this.Btnデフォルトに戻す.Name = "Btnデフォルトに戻す";
@@ -94,7 +87,7 @@ namespace HLTStudio
 			this.Btnデフォルトに戻す.UseVisualStyleBackColor = true;
 			this.Btnデフォルトに戻す.Click += new System.EventHandler(this.Btnデフォルトに戻す_Click);
 			// 
-			// ///////////
+			// SettingsWin
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -129,7 +122,3 @@ namespace HLTStudio
 		private System.Windows.Forms.Button Btnデフォルトに戻す;
 	}
 }
-
-//
-// <<< Processed by SolutionConv
-//

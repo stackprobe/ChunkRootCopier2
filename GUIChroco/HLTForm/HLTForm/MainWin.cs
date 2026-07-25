@@ -1,11 +1,4 @@
-﻿// Processed by SolutionConv >>>
-//
-// 本ソースファイルは、公開時の所定の手続きとして一部のセンシティブな情報をマスキングしています。
-// 元データの機微に触れる可能性がある箇所を伏せ字化したものであり、
-// リリース版との処理内容に実質的な差異が生じない範囲で調整を加えています。
-//
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -23,11 +16,11 @@ namespace HLTStudio
 {
 	public partial class MainWin : Form
 	{
-		// ///////// ///
+		// 隠しコントロール値 >>>
 
 		private int HVal_欠損ファイル数 = 0;
 
-		// /// /////////
+		// <<< 隠しコントロール値
 
 		public MainWin()
 		{
@@ -49,7 +42,7 @@ namespace HLTStudio
 
 			this.RefreshView();
 
-			// ////
+			// ----
 
 			try
 			{
@@ -220,27 +213,27 @@ namespace HLTStudio
 					{
 						ofd.FileName = "Context.xml";
 
-						////////////////////// / ///////
+						//ofd.InitialDirectory = "C:\\";
 						ofd.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory);
 
-						//////////// / /////////////////////////////////////////////////////////////////////////////
-						///////////////// / // // ////////
-						///////////////// / // // ///////
-						///////////////// / // // ////////
+						//ofd.Filter = "JPEGファイル(*.jpg;*.jpeg)|*.jpg;*.jpeg|PNGファイル(*.png)|*.png|すべてのファイル(*.*)|*.*";
+						//ofd.FilterIndex = 1; // JPEGファイル
+						//ofd.FilterIndex = 2; // PNGファイル
+						//ofd.FilterIndex = 3; // すべてのファイル
 						ofd.Filter = "XMLファイル(*.xml)|*.xml|すべてのファイル(*.*)|*.*";
 						ofd.FilterIndex = 1;
 
 						ofd.Title = "インポートするファイルを選択してください";
 						ofd.RestoreDirectory = true;
-						///////////////////// / /////
-						///////////////////// / /////
+						//ofd.CheckFileExists = true;
+						//ofd.CheckPathExists = true;
 
 						if (ofd.ShowDialog() == DialogResult.OK)
 						{
 							string selectedPath = SCommon.MakeFullPath(ofd.FileName);
 
 							if (!File.Exists(selectedPath))
-								throw null; // ///////////////////
+								throw null; // 存在しないファイルは選択できないはず！
 
 							this.ImportMain(selectedPath);
 						}
@@ -274,28 +267,28 @@ namespace HLTStudio
 					{
 						sfd.FileName = "Context.xml";
 
-						////////////////////// / ///////
+						//sfd.InitialDirectory = "C:\\";
 						sfd.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory);
 
-						//////////// / /////////////////////////////////////////////////////////////////////////////
-						///////////////// / // // ////////
-						///////////////// / // // ///////
-						///////////////// / // // ////////
+						//sfd.Filter = "JPEGファイル(*.jpg;*.jpeg)|*.jpg;*.jpeg|PNGファイル(*.png)|*.png|すべてのファイル(*.*)|*.*";
+						//sfd.FilterIndex = 1; // JPEGファイル
+						//sfd.FilterIndex = 2; // PNGファイル
+						//sfd.FilterIndex = 3; // すべてのファイル
 						sfd.Filter = "XMLファイル(*.xml)|*.xml|すべてのファイル(*.*)|*.*";
 						sfd.FilterIndex = 1;
 
 						sfd.Title = "エクスポート先ファイルを選択してください";
 						sfd.RestoreDirectory = true;
-						///////////////////// / /////
-						///////////////////// / /////
+						//sfd.OverwritePrompt = true;
+						//sfd.CheckPathExists = true;
 
 						if (sfd.ShowDialog() == DialogResult.OK)
 						{
 							string selectedPath = sfd.FileName;
 
-							// //////////
-							//// ////////////////////////////
-							/////// /////
+							// 存在しなくても良い。
+							//if (!File.Exists(selectedPath))
+							//throw null;
 
 							this.ExportMain(selectedPath);
 						}
@@ -327,8 +320,8 @@ namespace HLTStudio
 				string inputRootDir = root["Context/InputRootDir"].Value;
 				string outputRootDir = root["Context/OutputRootDir"].Value;
 				string[] targetRelPaths = root.GetNodes("Context/TargetRelPaths/TargetRelPath").Select(node => node.Value).ToArray();
-				bool check1 = root["Context/Check1"].Value.StartsWithIgnoreCase("T"); // / ////
-				bool check2 = root["Context/Check2"].Value.StartsWithIgnoreCase("T"); // / ////
+				bool check1 = root["Context/Check1"].Value.StartsWithIgnoreCase("T"); // ? True
+				bool check2 = root["Context/Check2"].Value.StartsWithIgnoreCase("T"); // ? True
 
 				if (inputRootDir != "")
 				{
@@ -382,16 +375,16 @@ namespace HLTStudio
 			if (string.IsNullOrWhiteSpace(targetRelPath))
 				return false;
 
-			if (targetRelPath.Contains(':')) // / ////////////
+			if (targetRelPath.Contains(':')) // ? ドライブ名を含んでいる。
 				return false;
 
-			if (targetRelPath.Contains("\\\\")) // / ////////
+			if (targetRelPath.Contains("\\\\")) // ? 空のパストークン
 				return false;
 
-			if (targetRelPath.StartsWith("\\")) // / ///////////////
+			if (targetRelPath.StartsWith("\\")) // ? パストークンで始まっていない。
 				return false;
 
-			if (targetRelPath.EndsWith("\\")) // / ///////////////
+			if (targetRelPath.EndsWith("\\")) // ? パストークンで終わっていない。
 				return false;
 
 			return true;
@@ -532,7 +525,7 @@ namespace HLTStudio
 				error2 = true;
 			}
 
-			this.SubStatus.Text = ""; // ///// //////
+			this.SubStatus.Text = ""; // HACK: 使ってない。
 
 			{
 				Color VERY_LIGHT_GRAY = Color.FromArgb(250, 250, 250);
@@ -620,7 +613,7 @@ namespace HLTStudio
 			}
 		}
 
-		#region ///////
+		#region Execute
 
 		private void BtnExecute_Click(object sender, EventArgs e)
 		{
@@ -678,7 +671,7 @@ namespace HLTStudio
 					return;
 			}
 
-			// ///////
+			// Confirm
 			{
 				string 対象パス件数_trailer = this.HVal_欠損ファイル数 == 0 ? "" : $"\u3000( 欠損ファイル数：{this.HVal_欠損ファイル数} )";
 
@@ -723,7 +716,7 @@ namespace HLTStudio
 						this.TxtOutputRootDir.Text,
 						targetRelPathListFile,
 						logFile,
-						this.Chkコピー前にコピー先をクリアする.Checked ? S_0 : S_1, // /// /////////
+						this.Chkコピー前にコピー先をクリアする.Checked ? S_0 : S_1, // 0/1 であることに注意！
 						this.Chk大文字小文字は対象パスリストに合わせる.Checked ? S_1 : S_0,
 						successfulFile,
 					},
@@ -770,7 +763,3 @@ namespace HLTStudio
 		#endregion
 	}
 }
-
-//
-// <<< Processed by SolutionConv
-//

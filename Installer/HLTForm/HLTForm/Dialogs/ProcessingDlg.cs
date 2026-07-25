@@ -1,11 +1,4 @@
-﻿// Processed by SolutionConv >>>
-//
-// 本ソースファイルは、公開時の所定の手続きとして一部のセンシティブな情報をマスキングしています。
-// 元データの機微に触れる可能性がある箇所を伏せ字化したものであり、
-// リリース版との処理内容に実質的な差異が生じない範囲で調整を加えています。
-//
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -21,7 +14,7 @@ namespace HLTStudio.Dialogs
 {
 	public partial class ProcessingDlg : Form
 	{
-		#region ///////
+		#region WndProc
 
 		[SecurityPermission(SecurityAction.LinkDemand, Flags = SecurityPermissionFlag.UnmanagedCode)]
 		protected override void WndProc(ref Message m)
@@ -44,7 +37,7 @@ namespace HLTStudio.Dialogs
 			{
 				f.P_Routine = routine;
 
-				f.MainMessage.Text = $"「{Consts.APPLICATION_NAME}」を{nameOfProcess}しています...";
+				f.MainMessage.Text = $"「{Consts.APPLICATION_LONG_NAME}」を{nameOfProcess}しています...";
 				f.ShowDialog();
 
 				if (f.P_Ex != null)
@@ -98,7 +91,3 @@ namespace HLTStudio.Dialogs
 		}
 	}
 }
-
-//
-// <<< Processed by SolutionConv
-//

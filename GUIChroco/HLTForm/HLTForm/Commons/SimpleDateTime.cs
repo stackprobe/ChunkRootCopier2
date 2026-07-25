@@ -1,30 +1,15 @@
-﻿// Processed by SolutionConv >>>
-//
-// 本ソースファイルは、公開時の所定の手続きとして一部のセンシティブな情報をマスキングしています。
-// 元データの機微に触れる可能性がある箇所を伏せ字化したものであり、
-// リリース版との処理内容に実質的な差異が生じない範囲で調整を加えています。
-//
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
 namespace HLTStudio.Commons
 {
-	// ////////////////////////////////////////////////////////////////////////////////
-	// ///// ///////////////////////// /////
-	// ////////////////////////////////////////////////////////////////////////////////
-	// ////////////////////////////////////////////////
-	// ////////////////////
-	// ///////////////////////////////////////
-	// ////////////////////////////////////////////////////////////////////////////////
-
-	/// /////////
-	/// /////
-	/// // // ///// ////////
-	/// // // /////////////// ////////
-	/// //////////
+	/// <summary>
+	/// 日時の範囲
+	/// -- 最小 1/1/1 00:00:00
+	/// -- 最大 922337203/12/31 23:59:59
+	/// </summary>
 	public struct SimpleDateTime
 	{
 		private readonly long TimeStamp;
@@ -185,13 +170,13 @@ namespace HLTStudio.Commons
 
 		public DateTime ToDateTime()
 		{
-			// ///// / /////////
-			// //////// ///////// ///// //////// / ////////// ////////
-			// ////////////
+			// memo: @ 2023.8.30
+			// DateTime に変換できる日時は 1/1/1 00:00:00 ～ 9999/12/31 23:59:59
+			// それ以外は例外を投げる。
 
-			// ///// / /////////
-			// ////// /// ////////////// // /// /// /// /// ////// //// / //////////////////////// ////
-			// /// /////////////// ////////////////// /////////////// //// ///// /////////////////// //////////////// ////
+			// memo: @ 2023.8.31
+			// 以下のように new DateTime(2023, 8, 31, 11, 19, 30) と作成すると Kind は DateTimeKind.Unspecified になる。
+			// これは .ToLocalTime(), .ToUniversalTime() によって日時変更可能でこのとき Kind はそれぞれ DateTimeKind.Local, DateTimeKind.Utc になる。
 
 			return new DateTime(this.Year, this.Month, this.Day, this.Hour, this.Minute, this.Second);
 		}
@@ -435,9 +420,9 @@ namespace HLTStudio.Commons
 				this.Second;
 		}
 
-		// ////
-		// ///////////////////////////////
-		// ////
+		// ====
+		// 日時の部分(年・年月・日付・日付時・日付時分)(仮)、ここから
+		// ====
 
 		public readonly struct Year_t
 		{
@@ -559,14 +544,14 @@ namespace HLTStudio.Commons
 			return new DateHourMinute_t(this.Year, this.Month, this.Day, this.Hour, this.Minute);
 		}
 
-		// ////
-		// ///////////////////////////////
-		// ////
+		// ====
+		// 日時の部分(年・年月・日付・日付時・日付時分)(仮)、ここまで
+		// ====
 
-		/// /////////
-		/// //////////
-		/// //////////
-		/// /////////////////////////
+		/// <summary>
+		/// 月末の同時刻を返す。
+		/// </summary>
+		/// <returns>月末の同時刻</returns>
 		public SimpleDateTime ChangeToEndOfMonth()
 		{
 			return new SimpleDateTime(
@@ -580,7 +565,3 @@ namespace HLTStudio.Commons
 		}
 	}
 }
-
-//
-// <<< Processed by SolutionConv
-//

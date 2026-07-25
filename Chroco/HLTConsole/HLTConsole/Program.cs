@@ -1,11 +1,4 @@
-﻿// Processed by SolutionConv >>>
-//
-// 本ソースファイルは、公開時の所定の手続きとして一部のセンシティブな情報をマスキングしています。
-// 元データの機微に触れる可能性がある箇所を伏せ字化したものであり、
-// リリース版との処理内容に実質的な差異が生じない範囲で調整を加えています。
-//
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -41,13 +34,13 @@ namespace HLTStudio
 		private void Main3()
 		{
 #if DEBUG
-			// // ////// /// //
+			// -- choose one --
 
-			/////////// ////////////// //////// / ////
-			/////////// ////////////// //////// / ////
-			/////////// ////////////// //////// / ////
+			//Main4(new ArgsReader(new string[] { }));
+			//Main4(new ArgsReader(new string[] { }));
+			//Main4(new ArgsReader(new string[] { }));
 
-			// //
+			// --
 #endif
 			SCommon.Pause();
 		}
@@ -62,13 +55,13 @@ namespace HLTStudio
 			{
 				P_WriteLog(ex);
 
-				//////////////////////////////// /////////////////////////////////////////////////////// / ///// ///////////////////// //////////////////////
+				//MessageBox.Show(ex.ToString(), $"{Path.GetFileNameWithoutExtension(ProcMain.SelfFile)} / エラー", MessageBoxButtons.OK, MessageBoxIcon.Error);
 
 				P_WriteLog(ex);
 			}
 		}
 
-		// // // //
+		// -- 引数 --
 
 		private string InputRootDir = null;
 		private string OutputRootDir = null;
@@ -79,7 +72,7 @@ namespace HLTStudio
 		private bool DontNormalizePathCase = false;
 		private Encoding TargetRelPathListFileEncoding = Encoding.UTF8;
 
-		// ////
+		// ----
 
 		private string[] TargetRelPaths;
 
@@ -150,7 +143,7 @@ namespace HLTStudio
 			}
 			ar.End();
 
-			// // ////// //
+			// -- 引数チェック --
 
 			if (InputRootDir == null)
 				throw new Exception("入力フォルダを指定してください。");
@@ -170,13 +163,13 @@ namespace HLTStudio
 			if (!File.Exists(TargetRelPathListFile))
 				throw new Exception("対象パスリストファイルが存在しません。");
 
-			// ///////
-			// //////////////
-			// //////////////////
-			// /////////////////////
-			// /////////////////////////////
+			// LogFile
+			// SuccessfulFile
+			// DontClearOutputDir
+			// DontNormalizePathCase
+			// TargetRelPathListFileEncoding
 
-			// ////
+			// ----
 
 			P_WriteLog("-- Parameters --");
 			P_WriteLog($"InputRootDir：{InputRootDir}");
@@ -303,7 +296,7 @@ namespace HLTStudio
 		{
 			P_WriteLog($"ディレクトリ \"{dir}\" をクリーンアップします...");
 
-			// //////
+			// zantei
 			if (dir.Length <= 3)
 				throw new Exception("安全のためルートディレクトリはクリーンアップできません！");
 
@@ -337,7 +330,3 @@ namespace HLTStudio
 		}
 	}
 }
-
-//
-// <<< Processed by SolutionConv
-//

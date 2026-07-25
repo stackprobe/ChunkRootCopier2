@@ -1,26 +1,12 @@
-﻿// Processed by SolutionConv >>>
-//
-// 本ソースファイルは、公開時の所定の手続きとして一部のセンシティブな情報をマスキングしています。
-// 元データの機微に触れる可能性がある箇所を伏せ字化したものであり、
-// リリース版との処理内容に実質的な差異が生じない範囲で調整を加えています。
-//
-
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using HLTStudio.Commons;
 
 namespace HLTStudio
 {
-	// ////////////////////////////////////////////////////////////////////////////////
-	// ///// ///////////////////////// /////
-	// ////////////////////////////////////////////////////////////////////////////////
-	// ////////////////////////////////////////////////
-	// ////////////////////
-	// ///////////////////////////////////////
-	// ////////////////////////////////////////////////////////////////////////////////
-
 	public static class Extensions
 	{
 		public static IEnumerable<T> DistinctOrderBy<T>(this IEnumerable<T> src, Comparison<T> comp)
@@ -75,6 +61,21 @@ namespace HLTStudio
 		public static int IndexOfIgnoreCase(this string a, char b, int startIndex)
 		{
 			return SCommon.IndexOfIgnoreCase(a, b, startIndex);
+		}
+
+		public static int IndexOf(this IList<string> strs, string str)
+		{
+			return SCommon.IndexOf(strs, str);
+		}
+
+		public static int IndexOf(this IList<string> strs, string str, int index)
+		{
+			return SCommon.IndexOf(strs, str, index);
+		}
+
+		public static int IndexOf(this IList<string> strs, string str, int index, int count)
+		{
+			return SCommon.IndexOf(strs, str, index, count);
 		}
 
 		public static int IndexOfIgnoreCase(this IList<string> strs, string str)
@@ -140,9 +141,45 @@ namespace HLTStudio
 		{
 			return SCommon.ReplaceAllIgnoreCase(text, replacements);
 		}
+
+		public static IEnumerable<T> E_RemoveAt<T>(this IEnumerable<T> src, int index)
+		{
+			return SCommon.E_RemoveAt(src, index);
+		}
+
+		public static IEnumerable<T> E_RemoveRange<T>(this IEnumerable<T> src, int index, int count)
+		{
+			return SCommon.E_RemoveRange(src, index, count);
+		}
+
+		public static IEnumerable<T> E_Insert<T>(this IEnumerable<T> src, int index, T element)
+		{
+			return SCommon.E_Insert(src, index, element);
+		}
+
+		public static IEnumerable<T> E_InsertRange<T>(this IEnumerable<T> src, int index, IEnumerable<T> elements)
+		{
+			return SCommon.E_InsertRange(src, index, elements);
+		}
+
+		public static IEnumerable<T> E_Add<T>(this IEnumerable<T> src, T element)
+		{
+			return SCommon.E_Add(src, element);
+		}
+
+		public static IEnumerable<T> E_AddRange<T>(this IEnumerable<T> src, IEnumerable<T> elements)
+		{
+			return SCommon.E_AddRange(src, elements);
+		}
+
+		public static DateTime EffectiveTime(this FileInfo fileInfo)
+		{
+			return SCommon.EffectiveTime(fileInfo);
+		}
+
+		public static DateTime EffectiveTimeUtc(this FileInfo fileInfo)
+		{
+			return SCommon.EffectiveTimeUtc(fileInfo);
+		}
 	}
 }
-
-//
-// <<< Processed by SolutionConv
-//

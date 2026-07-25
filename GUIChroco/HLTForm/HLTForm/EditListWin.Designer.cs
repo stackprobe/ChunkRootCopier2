@@ -1,23 +1,16 @@
-﻿// Processed by SolutionConv >>>
-//
-// 本ソースファイルは、公開時の所定の手続きとして一部のセンシティブな情報をマスキングしています。
-// 元データの機微に触れる可能性がある箇所を伏せ字化したものであり、
-// リリース版との処理内容に実質的な差異が生じない範囲で調整を加えています。
-//
-
-namespace HLTStudio
+﻿namespace HLTStudio
 {
 	partial class EditListWin
 	{
-		/// /////////
-		/// //////// //////// /////////
-		/// //////////
+		/// <summary>
+		/// Required designer variable.
+		/// </summary>
 		private System.ComponentModel.IContainer components = null;
 
-		/// /////////
-		/// ///// // /// ///////// ///// /////
-		/// //////////
-		/// ////// ///////////////////// // /////// ///////// ////// // ///////// ////////// //////////////
+		/// <summary>
+		/// Clean up any resources being used.
+		/// </summary>
+		/// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
 		protected override void Dispose(bool disposing)
 		{
 			if (disposing && (components != null))
@@ -27,12 +20,12 @@ namespace HLTStudio
 			base.Dispose(disposing);
 		}
 
-		#region /////// //// //////// ///////// ////
+		#region Windows Form Designer generated code
 
-		/// /////////
-		/// //////// ////// /// //////// /////// / // /// //////
-		/// /// //////// // //// ////// //// /// //// ///////
-		/// //////////
+		/// <summary>
+		/// Required method for Designer support - do not modify
+		/// the contents of this method with the code editor.
+		/// </summary>
 		private void InitializeComponent()
 		{
 			this.components = new System.ComponentModel.Container();
@@ -49,7 +42,7 @@ namespace HLTStudio
 			this.MainSheetMenu.SuspendLayout();
 			this.SuspendLayout();
 			// 
-			// /////////
+			// MainSheet
 			// 
 			this.MainSheet.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
@@ -63,7 +56,7 @@ namespace HLTStudio
 			this.MainSheet.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.MainSheet_CellValueChanged);
 			this.MainSheet.SelectionChanged += new System.EventHandler(this.MainSheet_SelectionChanged);
 			// 
-			// ////////
+			// Btnキャンセル
 			// 
 			this.Btnキャンセル.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
 			this.Btnキャンセル.Location = new System.Drawing.Point(652, 489);
@@ -74,7 +67,7 @@ namespace HLTStudio
 			this.Btnキャンセル.UseVisualStyleBackColor = true;
 			this.Btnキャンセル.Click += new System.EventHandler(this.Btnキャンセル_Click);
 			// 
-			// /////
+			// BtnOK
 			// 
 			this.BtnOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
 			this.BtnOK.Location = new System.Drawing.Point(652, 423);
@@ -85,7 +78,7 @@ namespace HLTStudio
 			this.BtnOK.UseVisualStyleBackColor = true;
 			this.BtnOK.Click += new System.EventHandler(this.BtnOK_Click);
 			// 
-			// /////////////
+			// MainSheetMenu
 			// 
 			this.MainSheetMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.MainSheetMenu_選択されている行を対象にする,
@@ -93,21 +86,21 @@ namespace HLTStudio
 			this.MainSheetMenu.Name = "MainSheetMenu";
 			this.MainSheetMenu.Size = new System.Drawing.Size(248, 48);
 			// 
-			// ////////////////////////////
+			// MainSheetMenu_選択されている行を対象にする
 			// 
 			this.MainSheetMenu_選択されている行を対象にする.Name = "MainSheetMenu_選択されている行を対象にする";
 			this.MainSheetMenu_選択されている行を対象にする.Size = new System.Drawing.Size(247, 22);
 			this.MainSheetMenu_選択されている行を対象にする.Text = "選択されている行を対象にする(&S)";
 			this.MainSheetMenu_選択されている行を対象にする.Click += new System.EventHandler(this.MainSheetMenu_選択されている行を対象にする_Click);
 			// 
-			// /////////////////////////////
+			// MainSheetMenu_選択されている行を対象から外す
 			// 
 			this.MainSheetMenu_選択されている行を対象から外す.Name = "MainSheetMenu_選択されている行を対象から外す";
 			this.MainSheetMenu_選択されている行を対象から外す.Size = new System.Drawing.Size(247, 22);
 			this.MainSheetMenu_選択されている行を対象から外す.Text = "選択されている行を対象から外す(&U)";
 			this.MainSheetMenu_選択されている行を対象から外す.Click += new System.EventHandler(this.MainSheetMenu_選択されている行を対象から外す_Click);
 			// 
-			// /////
+			// Btn検索
 			// 
 			this.Btn検索.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
 			this.Btn検索.Location = new System.Drawing.Point(652, 12);
@@ -118,7 +111,7 @@ namespace HLTStudio
 			this.Btn検索.UseVisualStyleBackColor = true;
 			this.Btn検索.Click += new System.EventHandler(this.Btn検索_Click);
 			// 
-			// /////////
+			// LblStatus
 			// 
 			this.LblStatus.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
 			this.LblStatus.AutoSize = true;
@@ -128,7 +121,7 @@ namespace HLTStudio
 			this.LblStatus.TabIndex = 4;
 			this.LblStatus.Text = "選択：999999 件\r\n対象：999999 件\r\n総数：999999 件";
 			// 
-			// ///////////
+			// EditListWin
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -166,7 +159,3 @@ namespace HLTStudio
 		private System.Windows.Forms.Label LblStatus;
 	}
 }
-
-//
-// <<< Processed by SolutionConv
-//
