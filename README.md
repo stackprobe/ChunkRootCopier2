@@ -2,7 +2,7 @@
 
 ChunkRootCopier2 は、入力ルート配下の一部のパスだけを、同じ相対パス構造で出力ルートへコピーする Windows 向け C# アプリケーションです。
 
-ChunkRootCopier2 は、前身となる C 言語製コマンドラインツール [`Chroco.c`](https://github.com/stackprobe/Factory_20250809/blob/main/Factory/SubTools/Chroco.c) を GUI アプリケーションとして改良したものです。
+ChunkRootCopier2 は、前身となる C 言語製コマンドラインツール [`Chroco.c`](https://github.com/stackprobe/CSharp2/blob/main/Factory/SubTools/Chroco.c) を GUI アプリケーションとして改良したものです。
 
 リポジトリには次の 3 つのプロジェクトが含まれます。
 
